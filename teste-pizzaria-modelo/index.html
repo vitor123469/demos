@@ -1,197 +1,210 @@
 <!doctype html>
 <html lang="pt-br"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Pizzaria Bella Napoli — Pizzaria em Campinas</title>
-<meta name="description" content="Pizzaria Bella Napoli — A pizza napoletana mais amada do Cambuí, feita em forno a lenha.">
+<title>Pizzaria Bella Napoli — Pizzaria, Campinas</title>
+<meta name="description" content="Pizzaria Bella Napoli · A pizza napoletana mais amada do Cambuí, feita em forno a lenha.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..800&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--c:#c0392b;--c2:#7b241c;--ink:#141419;--muted:#6b7280;--bg:#ffffff;--soft:#f6f7f9;--radius:22px}
+:root{--ac:#c0392b;--duo:#7b241c;--paper:#f6efe6;--ink:#1c1512;--line:rgba(0,0,0,.12)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
-h1,h2,h3,.display{font-family:Sora,sans-serif;letter-spacing:-.02em;line-height:1.08}
-a{text-decoration:none;color:inherit}
+body{font-family:Archivo,system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:17px}
+.f{font-family:Fraunces,Georgia,serif}
+a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
-.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
-.reveal.in{opacity:1;transform:none}
+.kick{font-size:12px;letter-spacing:.28em;text-transform:uppercase;font-weight:600}
+.wrap{max-width:1160px;margin:0 auto;padding:0 30px}
+.duo{position:relative;background-size:cover;background-position:center;filter:contrast(1.04) saturate(.92)}
+.duo::before{content:"";position:absolute;inset:0;background:var(--duo);mix-blend-mode:color;opacity:.62}
+.duo::after{content:"";position:absolute;inset:0;background:var(--ac);mix-blend-mode:multiply;opacity:.16}
+.rise{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.19,1,.22,1),transform .9s cubic-bezier(.19,1,.22,1)}
+.rise.in{opacity:1;transform:none}
 /* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 22px;transition:.35s}
-.nav.solid{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);box-shadow:0 6px 24px rgba(0,0,0,.06)}
-.brand{font-family:Sora;font-weight:800;font-size:20px;color:#fff;transition:.35s;display:flex;align-items:center;gap:9px}
-.brand .b-dot{width:11px;height:11px;border-radius:50%;background:var(--c)}
-.nav.solid .brand{color:var(--ink)}
-.nav-cta{background:var(--c);color:#fff;font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px;box-shadow:0 8px 22px rgba(0,0,0,.18);transition:transform .15s}
-.nav-cta:hover{transform:translateY(-2px)}
+.nav{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:22px 30px;color:var(--paper);transition:.4s}
+.nav.solid{background:var(--paper);color:var(--ink);box-shadow:0 1px 0 var(--line);padding:15px 30px}
+.wordmark{font-family:Fraunces;font-weight:600;font-size:23px;letter-spacing:-.01em}
+.nav .menu-links{display:flex;gap:30px;align-items:center}
+.nav .menu-links a{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.nav .call{border:1px solid currentColor;padding:9px 18px;border-radius:2px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 /* HERO */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;color:#fff;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background-image:linear-gradient(120deg,rgba(10,10,15,.82),rgba(10,10,15,.35)),url("https://loremflickr.com/1600/900/pizza,italian,restaurant?lock=820");background-size:cover;background-position:center;transform:scale(1.06);animation:zoom 18s ease-in-out infinite alternate}
-@keyframes zoom{to{transform:scale(1)}}
-.hero-inner{position:relative;z-index:2;padding:120px 0 80px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:22px;backdrop-filter:blur(6px)}
-.hero h1{font-size:clamp(38px,7vw,74px);font-weight:800;max-width:15ch;margin-bottom:20px}
-.hero p.lead{font-size:clamp(17px,2.4vw,22px);max-width:56ch;opacity:.92;margin-bottom:34px;font-weight:400}
-.btn-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.btn{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:16px;padding:16px 30px;border-radius:14px;transition:transform .15s,box-shadow .15s}
-.btn-wa{background:#25D366;color:#fff;box-shadow:0 12px 34px rgba(37,211,102,.4)}
-.btn-wa:hover{transform:translateY(-3px)}
-.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)}
-.hero .rate{margin-top:30px;display:flex;align-items:center;gap:12px;font-size:15px;opacity:.95}
-.hero .rate .st{color:#ffce31;letter-spacing:2px}
-.scrolld{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;color:#fff;opacity:.7;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
-/* STATS */
-.stats{background:var(--ink);color:#fff;padding:34px 0}
-.stats .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
-.stat b{font-family:Sora;font-size:34px;font-weight:800;display:block;background:linear-gradient(120deg,#fff,#c9c9d6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.stat span{font-size:13px;opacity:.6;text-transform:uppercase;letter-spacing:.08em}
-/* SECTIONS */
-section.pad{padding:96px 0}
-.khead{text-align:center;max-width:640px;margin:0 auto 54px}
-.ktag{color:var(--c);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
-.khead h2{font-size:clamp(28px,4vw,44px);font-weight:800;margin-bottom:14px}
-.khead p{color:var(--muted);font-size:17px}
-.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
-.mcard{background:var(--bg);border:1px solid #ededf2;border-radius:var(--radius);overflow:hidden;transition:transform .3s,box-shadow .3s}
-.mcard:hover{transform:translateY(-8px);box-shadow:0 26px 60px rgba(0,0,0,.13)}
-.mcard .ph{height:190px;background-size:cover;background-position:center}
-.mcard .bd{padding:22px 22px 26px}
-.mcard h3{font-size:20px;font-weight:700;margin-bottom:6px}
-.mcard p{color:var(--muted);font-size:14px}
-.mcard .tagp{display:inline-block;margin-top:14px;color:var(--c);font-weight:700;font-size:14px}
-/* ABOUT */
-.about{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
-.about .ph{border-radius:var(--radius);height:420px;background-size:cover;background-position:center;box-shadow:0 30px 70px rgba(0,0,0,.18)}
-.about h2{font-size:clamp(26px,3.6vw,40px);font-weight:800;margin-bottom:18px}
-.about p{color:#4b4b55;font-size:16.5px;margin-bottom:16px}
-.checks{list-style:none;margin-top:22px;display:grid;gap:12px}
-.checks li{display:flex;gap:12px;align-items:flex-start;font-weight:500}
-.checks .ck{flex:none;width:24px;height:24px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-size:13px}
-/* DEPO */
-.depo{background:var(--soft)}
-.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.dcard{background:#fff;border-radius:var(--radius);padding:30px;box-shadow:0 10px 34px rgba(0,0,0,.05)}
-.dcard .st{color:#ffb400;letter-spacing:2px;margin-bottom:14px}
-.dcard p{font-size:15.5px;color:#3a3a44;margin-bottom:20px}
-.who{display:flex;align-items:center;gap:12px}
-.who img{width:46px;height:46px;border-radius:50%}
-.who b{font-size:15px}.who span{font-size:13px;color:var(--muted)}
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:var(--paper);overflow:hidden}
+.hero .bg{position:absolute;inset:0}
+.hero .bg.duo::after{opacity:.28}
+.scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.15) 45%,rgba(0,0,0,.35) 100%)}
+.hero-in{position:relative;z-index:2;padding:0 0 8vh;max-width:900px}
+.hero .kick{opacity:.9;margin-bottom:22px}
+.hero h1{font-weight:340;font-size:clamp(46px,9vw,116px);line-height:.96;letter-spacing:-.025em;margin-bottom:26px}
+.hero h1 em{font-style:italic;font-weight:420}
+.hero .lead{font-size:clamp(17px,2.1vw,21px);max-width:52ch;opacity:.94;margin-bottom:36px}
+.actions{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.solid-btn{background:var(--ac);color:#fff;padding:16px 30px;border-radius:2px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;transition:transform .2s}
+.solid-btn:hover{transform:translateY(-2px)}
+.text-link{font-size:13px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:3px}
+.hero .meta{position:absolute;right:0;bottom:8vh;z-index:2;text-align:right;font-size:13px;letter-spacing:.05em;opacity:.9;line-height:1.9}
+.hero .meta .stars{color:#e9b949;letter-spacing:3px;font-size:15px}
+/* STRIP */
+.strip{background:var(--ink);color:var(--paper)}
+.strip .wrap{display:flex;flex-wrap:wrap;gap:10px 46px;justify-content:center;padding:17px 30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.92}
+.strip b{color:var(--ac);font-weight:600}
+/* MENU / editorial list */
+.sec{padding:120px 0}
+.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:54px}
+.sechead h2{font-weight:340;font-size:clamp(32px,5vw,60px);line-height:1;letter-spacing:-.02em}
+.sechead h2 em{font-style:italic}
+.sechead .kick{color:var(--ac);opacity:.9;margin-bottom:14px}
+.menu-wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:start}
+.mlist{display:flex;flex-direction:column}
+.mitem{display:grid;grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.mitem:first-child{padding-top:0}
+.mitem .nm{font-family:Fraunces;font-weight:500;font-size:23px;letter-spacing:-.01em}
+.mitem .pr{font-family:Fraunces;font-size:19px;color:var(--ac);white-space:nowrap}
+.mitem .ds{grid-column:1/-1;font-size:14.5px;color:rgba(0,0,0,.55);max-width:52ch;margin-top:2px}
+.menu-photo{height:100%;min-height:520px;border-radius:2px}
+/* FEATURE quote */
+.feature{background:var(--ink);color:var(--paper)}
+.feature .wrap{padding:130px 30px;text-align:center}
+.feature .kick{color:var(--ac);margin-bottom:30px}
+.feature blockquote{font-family:Fraunces;font-weight:320;font-style:italic;font-size:clamp(26px,4.4vw,50px);line-height:1.22;letter-spacing:-.01em;max-width:20ch;margin:0 auto 34px}
+.feature cite{font-style:normal;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.65}
+/* ABOUT split */
+.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:0;align-items:stretch}
+.about .ph{min-height:600px}
+.about .tx{padding:min(9vw,120px) clamp(30px,6vw,90px);display:flex;flex-direction:column;justify-content:center}
+.about .kick{color:var(--ac);margin-bottom:20px}
+.about h2{font-family:Fraunces;font-weight:340;font-size:clamp(30px,4vw,50px);line-height:1.05;letter-spacing:-.02em;margin-bottom:26px}
+.about p{font-size:16.5px;color:rgba(0,0,0,.7);margin-bottom:18px;max-width:50ch}
+.about .signs{display:flex;gap:40px;margin-top:26px;flex-wrap:wrap}
+.about .signs b{font-family:Fraunces;font-size:38px;font-weight:500;display:block;line-height:1}
+.about .signs span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.5)}
 /* LOCAL */
-.local{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:var(--radius);overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.12)}
-.local .map{min-height:440px}
-.local .map iframe{width:100%;height:100%;border:0;min-height:440px}
-.local .info{background:var(--ink);color:#fff;padding:48px}
-.local .info h2{font-size:30px;font-weight:800;margin-bottom:26px}
-.irow{display:flex;gap:14px;margin-bottom:22px}
-.irow .ic{flex:none;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.1);display:grid;place-items:center;font-size:19px}
-.irow b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.1em;opacity:.55;margin-bottom:2px}
-.irow span{font-size:15.5px}
+.local{display:grid;grid-template-columns:1fr 1fr}
+.local .map iframe{width:100%;height:100%;min-height:520px;border:0;filter:grayscale(.35) contrast(1.05)}
+.local .info{background:var(--ink);color:var(--paper);padding:min(8vw,96px) clamp(30px,5vw,72px);display:flex;flex-direction:column;justify-content:center}
+.local .info h2{font-family:Fraunces;font-weight:340;font-size:clamp(28px,3.6vw,46px);margin-bottom:40px;letter-spacing:-.02em}
+.lrow{padding:20px 0;border-top:1px solid rgba(255,255,255,.16)}
+.lrow:last-of-type{border-bottom:1px solid rgba(255,255,255,.16)}
+.lrow .k{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);margin-bottom:5px}
+.lrow .v{font-size:16.5px}
+.local .info .solid-btn{margin-top:34px;align-self:flex-start}
 /* CTA */
-.cta{background:linear-gradient(120deg,var(--c),var(--c2));color:#fff;text-align:center;padding:84px 0}
-.cta h2{font-size:clamp(28px,4vw,46px);font-weight:800;margin-bottom:16px}
-.cta p{font-size:18px;opacity:.92;margin-bottom:30px}
-.cta .btn-wa{background:#fff;color:var(--c)}
+.cta{position:relative;color:var(--paper);text-align:center;overflow:hidden}
+.cta .bg{position:absolute;inset:0}
+.cta .scrim{background:rgba(10,6,4,.62)}
+.cta .wrap{position:relative;z-index:2;padding:150px 30px}
+.cta h2{font-family:Fraunces;font-weight:340;font-size:clamp(34px,6vw,74px);line-height:1;letter-spacing:-.02em;margin-bottom:26px}
+.cta h2 em{font-style:italic}
+.cta p{opacity:.9;margin-bottom:36px;font-size:18px}
 /* FOOT */
-footer{background:#0d0d12;color:#8b8b98;padding:52px 0 40px;text-align:center}
-footer .fb{font-family:Sora;font-weight:800;color:#fff;font-size:22px;margin-bottom:8px}
-footer .cred{margin-top:20px;font-size:12.5px;opacity:.5}
-/* FLOAT */
-.fab{position:fixed;bottom:22px;right:22px;z-index:60;width:62px;height:62px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 12px 30px rgba(37,211,102,.5);animation:pulse 2.4s infinite}
-.fab svg{width:32px;height:32px;fill:#fff}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 18px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
-@media(max-width:860px){.menu,.dgrid{grid-template-columns:1fr 1fr}.stats .grid{grid-template-columns:1fr 1fr;gap:26px}.about,.local{grid-template-columns:1fr}.about .ph{height:280px}.local .map iframe{min-height:300px}}
-@media(max-width:560px){.menu,.dgrid{grid-template-columns:1fr}.hero-inner{padding-top:104px}}
+footer{background:var(--paper);color:var(--ink);padding:70px 30px 48px;border-top:1px solid var(--line)}
+footer .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;align-items:flex-end}
+footer .wordmark{font-size:30px}
+footer .fmeta{text-align:right;font-size:14px;line-height:1.9;color:rgba(0,0,0,.6)}
+footer .rule{height:1px;background:var(--line);margin:34px 0 20px}
+footer .cred{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.4)}
+/* FAB */
+.fab{position:fixed;right:22px;bottom:22px;z-index:50;background:var(--ink);color:var(--paper);border-radius:2px;padding:14px 20px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.25);transition:transform .2s}
+.fab:hover{transform:translateY(-2px)}
+@media(max-width:900px){.menu-wrap{grid-template-columns:1fr;gap:44px}.menu-photo{min-height:340px;order:-1}.about{grid-template-columns:1fr}.about .ph{min-height:360px}.local{grid-template-columns:1fr}.nav .menu-links{display:none}.hero .meta{display:none}}
 </style></head><body>
 
 <nav class="nav" id="nav">
-<div class="brand"><span class="b-dot"></span>Pizzaria Bella Napoli</div>
-<a class="nav-cta" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20quero%20fazer%20um%20pedido%20%3A%29">Falar no WhatsApp</a>
+  <div class="wordmark">Pizzaria Bella Napoli</div>
+  <div class="menu-links">
+    <a href="#menu">cardápio</a>
+    <a href="#sobre">História</a>
+    <a href="#visitar">Visitar</a>
+    <a class="call" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">WhatsApp</a>
+  </div>
 </nav>
 
 <header class="hero">
-<div class="hero-bg"></div>
-<div class="wrap hero-inner">
-<span class="eyebrow">★ Pizzaria · Cambuí, Campinas</span>
-<h1>Pizzaria Bella Napoli</h1>
-<p class="lead">A pizza napoletana mais amada do Cambuí, feita em forno a lenha.</p>
-<div class="btn-row">
-<a class="btn btn-wa" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20quero%20fazer%20um%20pedido%20%3A%29">📲 Fazer pedido agora</a>
-<a class="btn btn-ghost" href="#cardapio">Ver cardápio</a>
-</div>
-<div class="rate"><span class="st">★★★★★</span> <span>4,8 no Google · 324 avaliações</span></div>
-</div>
-<div class="scrolld">role para descobrir ↓</div>
+  <div class="bg duo" style="background-image:url('https://loremflickr.com/1600/1200/pizza,pizzeria,dough?lock=309')"></div>
+  <div class="scrim"></div>
+  <div class="wrap hero-in">
+    <div class="kick rise">Pizzaria · Campinas</div>
+    <h1 class="f rise">Pizzaria Bella Napoli</h1>
+    <p class="lead rise">A pizza napoletana mais amada do Cambuí, feita em forno a lenha.</p>
+    <div class="actions rise">
+      <a class="solid-btn" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">Fazer um pedido</a>
+      <a class="text-link" href="#menu">Ver cardápio</a>
+    </div>
+  </div>
+  <div class="wrap"><div class="meta"><div class="stars">★★★★★</div>4,8 · 324 avaliações no Google</div></div>
 </header>
 
-<div class="stats"><div class="wrap"><div class="grid">
-<div class="stat reveal"><b>4,8</b><span>Nota no Google</span></div>
-<div class="stat reveal"><b>324+</b><span>Clientes felizes</span></div>
-<div class="stat reveal"><b>10 anos</b><span>De história</span></div>
-<div class="stat reveal"><b>100%</b><span>Feito com amor</span></div>
-</div></div></div>
+<div class="strip"><div class="wrap">
+  <span>Peça pelo WhatsApp</span><span><b>·</b></span><span>Ter a Dom, 18h às 23h30</span><span><b>·</b></span><span>Campinas</span>
+</div></div>
 
-<section class="pad" id="cardapio"><div class="wrap">
-<div class="khead reveal"><div class="ktag">Nosso cardápio</div><h2>Sabores que você vai amar</h2><p>Feito na hora, do jeito que você gosta</p></div>
-<div class="menu"><div class="mcard reveal"><div class="ph" style="background-image:url('https://loremflickr.com/600/400/Margherita,pizza?lock=840')"></div><div class="bd"><h3>Margherita</h3><p>Preparado com ingredientes selecionados e todo o capricho da casa.</p><span class="tagp">Peça no WhatsApp →</span></div></div><div class="mcard reveal"><div class="ph" style="background-image:url('https://loremflickr.com/600/400/Calabresa,pizza?lock=841')"></div><div class="bd"><h3>Calabresa Artesanal</h3><p>Preparado com ingredientes selecionados e todo o capricho da casa.</p><span class="tagp">Peça no WhatsApp →</span></div></div><div class="mcard reveal"><div class="ph" style="background-image:url('https://loremflickr.com/600/400/Portuguesa,pizza?lock=842')"></div><div class="bd"><h3>Portuguesa</h3><p>Preparado com ingredientes selecionados e todo o capricho da casa.</p><span class="tagp">Peça no WhatsApp →</span></div></div><div class="mcard reveal"><div class="ph" style="background-image:url('https://loremflickr.com/600/400/Quatro,pizza?lock=843')"></div><div class="bd"><h3>Quatro Queijos</h3><p>Preparado com ingredientes selecionados e todo o capricho da casa.</p><span class="tagp">Peça no WhatsApp →</span></div></div><div class="mcard reveal"><div class="ph" style="background-image:url('https://loremflickr.com/600/400/Doce,pizza?lock=844')"></div><div class="bd"><h3>Doce de Nutella</h3><p>Preparado com ingredientes selecionados e todo o capricho da casa.</p><span class="tagp">Peça no WhatsApp →</span></div></div><div class="mcard reveal"><div class="ph" style="background-image:url('https://loremflickr.com/600/400/Rod%C3%ADzio,pizza?lock=845')"></div><div class="bd"><h3>Rodízio Premium</h3><p>Preparado com ingredientes selecionados e todo o capricho da casa.</p><span class="tagp">Peça no WhatsApp →</span></div></div></div>
+<section class="sec" id="menu"><div class="wrap">
+  <div class="sechead rise"><div><div class="kick">Do forno à mesa</div><h2 class="f">O cardápio</h2></div></div>
+  <div class="menu-wrap">
+    <div class="mlist"><div class="mitem"><div class="nm">Margherita</div><div class="ds">sob medida, do começo ao fim</div></div><div class="mitem"><div class="nm">Calabresa Artesanal</div><div class="ds">preparado no capricho, do jeito da casa</div></div><div class="mitem"><div class="nm">Portuguesa</div><div class="ds">receita da casa, feita na hora</div></div><div class="mitem"><div class="nm">Quatro Queijos</div><div class="ds">o queridinho de quem já é cliente</div></div><div class="mitem"><div class="nm">Doce de Nutella</div><div class="ds">clássico que nunca sai de moda</div></div><div class="mitem"><div class="nm">Rodízio Premium</div><div class="ds">pra quem gosta de coisa bem feita</div></div></div>
+    <div class="menu-photo duo rise" style="background-image:url('https://loremflickr.com/1600/1200/pizza,pizzeria,dough?lock=314')"></div>
+  </div>
 </div></section>
 
-<section class="pad" style="background:var(--soft)"><div class="wrap">
-<div class="about">
-<div class="ph reveal" style="background-image:url('https://loremflickr.com/900/700/pizza,italian,restaurant?lock=823')"></div>
-<div class="reveal">
-<div class="ktag">Sobre nós</div>
-<h2>Uma experiência que o seu bairro confia</h2>
-<p>Somos referência em pizzaria na região de Campinas. Cada cliente é tratado como único, com atenção aos detalhes e o compromisso de entregar sempre o melhor. Venha viver essa experiência.</p>
-<ul class="checks">
-<li><span class="ck">✓</span> Atendimento rápido e caprichado, do pedido à entrega</li>
-<li><span class="ck">✓</span> Qualidade reconhecida com 4,8★ e 324 avaliações</li>
-<li><span class="ck">✓</span> Peça em segundos direto pelo WhatsApp</li>
-</ul>
-</div>
-</div>
+<section class="feature"><div class="wrap rise">
+  <div class="kick">O que dizem</div>
+  <blockquote class="f">Simples assim: superou o que eu esperava. Recomendo pra qualquer um do bairro.</blockquote>
+  <cite>Diego F. — cliente</cite>
 </div></section>
 
-<section class="pad depo"><div class="wrap">
-<div class="khead reveal"><div class="ktag">Depoimentos</div><h2>Quem conhece, recomenda</h2><p>Avaliações reais de quem já é cliente</p></div>
-<div class="dgrid"><div class="dcard reveal"><div class="st">★★★★★</div><p>“Simplesmente perfeito. Rápido, caprichado e com um preço que vale muito a pena.”</p><div class="who"><img src="https://ui-avatars.com/api/?name=Juliana%20Costa&background=random&size=96" alt=""><div><b>Juliana Costa</b><span>Cliente verificado</span></div></div></div><div class="dcard reveal"><div class="st">★★★★★</div><p>“Sensacional! Já indiquei pra família toda. Padrão de qualidade que não cai nunca.”</p><div class="who"><img src="https://ui-avatars.com/api/?name=Bruno%20Martins&background=random&size=96" alt=""><div><b>Bruno Martins</b><span>Cliente verificado</span></div></div></div><div class="dcard reveal"><div class="st">★★★★★</div><p>“Apaixonada! Cada detalhe é pensado com carinho. Voltarei muitas vezes.”</p><div class="who"><img src="https://ui-avatars.com/api/?name=Carla%20Ribeiro&background=random&size=96" alt=""><div><b>Carla Ribeiro</b><span>Cliente verificado</span></div></div></div></div>
-</div></section>
+<section class="about" id="sobre">
+  <div class="ph duo rise" style="background-image:url('https://loremflickr.com/1600/1200/pizza,pizzeria,dough?lock=320')"></div>
+  <div class="tx">
+    <div class="kick rise">A casa</div>
+    <h2 class="rise">Feito por quem se importa, pra quem sabe a diferença</h2>
+    <p class="rise">Tem gente que passa, e tem gente que fica. A Pizzaria Bella Napoli nasceu em Campinas pra ser dessas: um lugar onde cada cliente é recebido pelo nome e cada detalhe é pensado com cuidado. Não é sobre ser mais um — é sobre ser o seu preferido.</p>
+    <div class="signs rise">
+      <div><b class="f">4,8</b><span>no Google</span></div>
+      <div><b class="f">324+</b><span>clientes</span></div>
+      <div><b class="f">10 anos</b><span>de casa</span></div>
+    </div>
+  </div>
+</section>
 
-<section class="pad"><div class="wrap">
-<div class="local">
-<div class="map"><iframe loading="lazy" src="https://www.google.com/maps?q=Rua%20Coronel%20Quirino%2C%201234%20-%20Cambu%C3%AD%2C%20Campinas&output=embed" allowfullscreen></iframe></div>
-<div class="info">
-<h2>Venha nos visitar</h2>
-<div class="irow"><div class="ic">📍</div><div><b>Endereço</b><span>Rua Coronel Quirino, 1234 - Cambuí</span></div></div>
-<div class="irow"><div class="ic">🕒</div><div><b>Horário</b><span>Ter a Dom, 18h às 23h30</span></div></div>
-<div class="irow"><div class="ic">📱</div><div><b>Contato</b><span>(19) 99999-0000</span></div></div>
-<a class="btn btn-wa" style="margin-top:8px" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20quero%20fazer%20um%20pedido%20%3A%29">Chamar no WhatsApp</a>
-</div>
-</div>
-</div></section>
+<section class="local" id="visitar">
+  <div class="map"><iframe loading="lazy" src="https://www.google.com/maps?q=Rua%20Coronel%20Quirino%2C%201234%20-%20Cambu%C3%AD%2C%20Campinas&output=embed" allowfullscreen></iframe></div>
+  <div class="info">
+    <h2 class="f">Onde a gente fica</h2>
+    <div class="lrow"><div class="k">Endereço</div><div class="v">Rua Coronel Quirino, 1234 - Cambuí</div></div>
+    <div class="lrow"><div class="k">Horário</div><div class="v">Ter a Dom, 18h às 23h30</div></div>
+    <div class="lrow"><div class="k">WhatsApp</div><div class="v">(19) 99999-0000</div></div>
+    <a class="solid-btn" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">Chamar no WhatsApp</a>
+  </div>
+</section>
 
-<section class="cta"><div class="wrap reveal">
-<h2>Bateu a vontade?</h2>
-<p>Faça seu pedido agora — é rápido, fácil e direto no WhatsApp.</p>
-<a class="btn btn-wa" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20quero%20fazer%20um%20pedido%20%3A%29">📲 Pedir pelo WhatsApp</a>
-</div></section>
+<section class="cta">
+  <div class="bg duo" style="background-image:url('https://loremflickr.com/1600/1200/pizza,pizzeria,dough?lock=326')"></div>
+  <div class="scrim"></div>
+  <div class="wrap">
+    <h2 class="f">Bateu a <em>fome</em>?</h2>
+    <p>Faça seu pedido agora, direto no WhatsApp. Rápido e sem complicação.</p>
+    <a class="solid-btn" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">Pedir agora</a>
+  </div>
+</section>
 
 <footer><div class="wrap">
-<div class="fb">Pizzaria Bella Napoli</div>
-<div>Rua Coronel Quirino, 1234 - Cambuí · Campinas</div>
-<div style="margin-top:6px">(19) 99999-0000</div>
-<div class="cred">Site desenvolvido sob medida · prévia exclusiva para Pizzaria Bella Napoli</div>
+  <div class="top">
+    <div class="wordmark f">Pizzaria Bella Napoli</div>
+    <div class="fmeta">Rua Coronel Quirino, 1234 - Cambuí<br>Campinas · (19) 99999-0000<br>Ter a Dom, 18h às 23h30</div>
+  </div>
+  <div class="rule"></div>
+  <div class="cred">Prévia de site · Pizzaria Bella Napoli</div>
 </div></footer>
 
-<a class="fab" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20quero%20fazer%20um%20pedido%20%3A%29" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.517 5.26l-.999 3.648 3.971-1.007zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
+<a class="fab" href="https://wa.me/5519999990000?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">WhatsApp</a>
 
 <script>
 document.addEventListener('DOMContentLoaded',function(){
-var nav=document.getElementById('nav');
-function s(){nav.classList.toggle('solid',window.scrollY>60)}
-s();window.addEventListener('scroll',s,{passive:true});
-var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.14});
-document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+  var nav=document.getElementById('nav');
+  function s(){nav.classList.toggle('solid',scrollY>60)} s();
+  addEventListener('scroll',s,{passive:true});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var el=e.target;var sibs=[].slice.call(el.parentNode.querySelectorAll('.rise'));var i=Math.max(0,sibs.indexOf(el));el.style.transitionDelay=(i*90)+'ms';el.classList.add('in');io.unobserve(el);}})},{threshold:.15});
+  document.querySelectorAll('.rise').forEach(function(el){io.observe(el)});
 });
 </script>
 </body></html>
