@@ -1,0 +1,37 @@
+name: garimpo
+on:
+  schedule:
+    - cron: '0 11 * * *'
+  workflow_dispatch:
+    inputs:
+      nicho:
+        description: 'Nicho (ex: pizzaria)'
+        required: false
+        default: ''
+      local:
+        description: 'Cidade (ex: Campinas SP)'
+        required: false
+        default: ''
+      quantidade:
+        description: 'Quantos leads'
+        required: false
+        default: '15'
+permissions:
+  contents: write
+concurrency:
+  group: fabrica
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: garimpar_e_gerar
+        env:
+          APIFY: ${{ secrets.APIFY_TOKEN }}
+          TG: ${{ secrets.TG_BOT_TOKEN }}
+          NICHO: ${{ inputs.nicho }}
+          LOCAL: ${{ inputs.local }}
+          QTD: ${{ inputs.quantidade }}
+        run: |
+          python3 garimpo.py
+          python3 build.py
