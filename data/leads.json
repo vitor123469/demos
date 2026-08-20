@@ -1,0 +1,20 @@
+[
+  {
+    "slug": "teste-pizzaria-modelo",
+    "nome": "Pizzaria Bella Napoli",
+    "tipo": "Pizzaria",
+    "cidade": "Campinas",
+    "uf": "SP",
+    "bairro": "Cambuí",
+    "telefone": "5519999990000",
+    "telefone_exibicao": "(19) 99999-0000",
+    "nota": "4,8",
+    "avaliacoes": "324",
+    "tagline": "A pizza napoletana mais amada do Cambuí, feita em forno a lenha.",
+    "itens": ["Margherita", "Calabresa Artesanal", "Portuguesa", "Quatro Queijos", "Doce de Nutella", "Rodízio Premium"],
+    "horario": "Ter a Dom, 18h às 23h30",
+    "endereco": "Rua Coronel Quirino, 1234 - Cambuí",
+    "cor": "#c0392b",
+    "cor2": "#7b241c"
+  }
+]
