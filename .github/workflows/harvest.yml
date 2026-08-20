@@ -1,0 +1,34 @@
+name: harvest
+on:
+  workflow_dispatch:
+    inputs:
+      nichos:
+        description: 'Qtos nichos (1-12)'
+        required: false
+        default: '5'
+      cidades:
+        description: 'Qtas cidades (1-40)'
+        required: false
+        default: '8'
+      lugares:
+        description: 'Lugares por busca'
+        required: false
+        default: '30'
+permissions:
+  contents: write
+concurrency:
+  group: fabrica
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: harvest
+        env:
+          APIFY: ${{ secrets.APIFY_TOKEN }}
+          TG: ${{ secrets.TG_BOT_TOKEN }}
+          MODE: harvest
+          NN: ${{ inputs.nichos }}
+          NC: ${{ inputs.cidades }}
+          PER: ${{ inputs.lugares }}
+        run: python3 garimpo.py
