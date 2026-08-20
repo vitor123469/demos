@@ -1,0 +1,18 @@
+name: fabrica
+on:
+  push:
+    paths: ['data/leads.json']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: fabrica
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: build_and_notify
+        env:
+          TG: ${{ secrets.TG_BOT_TOKEN }}
+        run: python3 build.py
