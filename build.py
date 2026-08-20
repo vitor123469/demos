@@ -49,229 +49,263 @@ def resolve_chats():
     return ids
 
 
+# palette per niche: (accent, accent2 for duotone, paper, ink)
+def palette_for(tipo, L):
+    s = (tipo or "").lower()
+    if L.get("cor"):
+        return (L["cor"], L.get("cor2", "#20140f"), L.get("paper", "#f6efe6"), L.get("ink", "#1c1512"))
+    if any(k in s for k in ["pizz", "restaur", "food", "comida", "bar", "boteco", "lanch", "hambur", "churrasc", "steak"]):
+        return ("#b5341f", "#2a0f08", "#f7efe4", "#1c1210")      # terracotta / warm
+    if any(k in s for k in ["caf", "confeit", "doce", "padar", "bake", "bistr"]):
+        return ("#8a5a2b", "#241608", "#f6eee2", "#211812")      # coffee / caramel
+    if any(k in s for k in ["barb"]):
+        return ("#b8823c", "#0f0f10", "#efece6", "#141416")      # brass on charcoal
+    if any(k in s for k in ["salão", "salao", "cabel", "beleza", "hair", "estetic", "estét", "spa", "unha", "clinic", "clín"]):
+        return ("#9a7b5a", "#221a16", "#f4efe9", "#201915")      # nude / warm taupe
+    if any(k in s for k in ["academ", "fit", "cross", "gym"]):
+        return ("#c6402e", "#101215", "#eef0f2", "#14171b")
+    return ("#9a5b34", "#1e1712", "#f5efe7", "#1d1712")
+
+
 def kw_for(tipo):
     s = (tipo or "").lower()
-    if any(k in s for k in ["pizz"]): return "pizza,italian,restaurant"
-    if any(k in s for k in ["hambur", "lanch", "burg"]): return "burger,food"
-    if any(k in s for k in ["restaur", "food", "comida", "bar", "boteco"]): return "restaurant,food,dish"
-    if any(k in s for k in ["caf", "confeit", "doce", "padar", "bake"]): return "cafe,bakery,coffee"
-    if any(k in s for k in ["acai", "açaí", "sorvet", "gelat"]): return "acai,dessert"
-    if any(k in s for k in ["barb"]): return "barbershop,haircut,beard"
-    if any(k in s for k in ["salão", "salao", "cabel", "beleza", "hair"]): return "hairsalon,beauty"
-    if any(k in s for k in ["estetic", "estét", "spa", "unha", "clinic", "clín"]): return "spa,beauty,wellness"
-    if any(k in s for k in ["academ", "fit", "cross", "gym"]): return "gym,fitness"
-    if any(k in s for k in ["pet", "veterin"]): return "pet,dog,animal"
-    if any(k in s for k in ["auto", "mecan", "mecân", "car"]): return "car,garage,auto"
-    return "business,shop,store"
+    if "pizz" in s: return "pizza,pizzeria,dough"
+    if any(k in s for k in ["hambur", "lanch", "burg"]): return "burger,gourmet"
+    if any(k in s for k in ["churrasc", "steak", "carne"]): return "steak,grill,meat"
+    if any(k in s for k in ["restaur", "food", "comida", "bar", "boteco"]): return "restaurant,plating,gastronomy"
+    if any(k in s for k in ["caf", "confeit", "doce", "padar", "bake"]): return "cafe,bakery,pastry"
+    if any(k in s for k in ["acai", "açaí", "sorvet"]): return "acai,bowl,fruit"
+    if "barb" in s: return "barbershop,barber,grooming"
+    if any(k in s for k in ["salão", "salao", "cabel", "beleza", "hair"]): return "hairstyle,salon"
+    if any(k in s for k in ["estetic", "estét", "spa", "unha", "clinic", "clín"]): return "spa,skincare,wellness"
+    if any(k in s for k in ["academ", "fit", "cross", "gym"]): return "gym,training,athlete"
+    return "storefront,craft,artisan"
 
 
 DEPO_POOL = [
-    ("Mariana Alves", "Melhor experiência que já tive na região. Atendimento nota 10 e qualidade impecável!"),
-    ("Rafael Souza", "Virei cliente fiel. Recomendo de olhos fechados pra todo mundo do bairro."),
-    ("Juliana Costa", "Simplesmente perfeito. Rápido, caprichado e com um preço que vale muito a pena."),
-    ("Bruno Martins", "Sensacional! Já indiquei pra família toda. Padrão de qualidade que não cai nunca."),
-    ("Carla Ribeiro", "Apaixonada! Cada detalhe é pensado com carinho. Voltarei muitas vezes."),
-    ("Diego Fernandes", "Superou minhas expectativas. Profissionais atenciosos e resultado incrível."),
+    ("Mariana A.", "Fui pela primeira vez semana passada e já virei cliente. O cuidado com cada detalhe faz toda a diferença."),
+    ("Rafael S.", "Melhor da região, sem exagero. Atendimento honesto e um capricho que a gente sente na hora."),
+    ("Juliana C.", "Indico de olhos fechados. Chega no ponto, no prazo, e sempre com aquele algo a mais."),
+    ("Bruno M.", "Já trouxe a família inteira. É daqueles lugares que a gente sente falta quando fica sem ir."),
+    ("Carla R.", "Atendimento de gente que gosta do que faz. Voltei três vezes só esse mês."),
+    ("Diego F.", "Simples assim: superou o que eu esperava. Recomendo pra qualquer um do bairro."),
 ]
 
 
 TEMPLATE = """<!doctype html>
 <html lang="pt-br"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>%%NOME%% — %%TIPO%% em %%CIDADE%%</title>
-<meta name="description" content="%%NOME%% — %%TAGLINE%%">
+<title>%%NOME%% — %%TIPO%%, %%CIDADE%%</title>
+<meta name="description" content="%%NOME%% · %%TAGLINE%%">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..800&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--c:%%COR%%;--c2:%%COR2%%;--ink:#141419;--muted:#6b7280;--bg:#ffffff;--soft:#f6f7f9;--radius:22px}
+:root{--ac:%%COR%%;--duo:%%COR2%%;--paper:%%PAPER%%;--ink:%%INK%%;--line:rgba(0,0,0,.12)}
 *{margin:0;padding:0;box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{font-family:Inter,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.65;-webkit-font-smoothing:antialiased}
-h1,h2,h3,.display{font-family:Sora,sans-serif;letter-spacing:-.02em;line-height:1.08}
-a{text-decoration:none;color:inherit}
+body{font-family:Archivo,system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:17px}
+.f{font-family:Fraunces,Georgia,serif}
+a{color:inherit;text-decoration:none}
 img{display:block;max-width:100%}
-.wrap{max-width:1120px;margin:0 auto;padding:0 22px}
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
-.reveal.in{opacity:1;transform:none}
+.kick{font-size:12px;letter-spacing:.28em;text-transform:uppercase;font-weight:600}
+.wrap{max-width:1160px;margin:0 auto;padding:0 30px}
+.duo{position:relative;background-size:cover;background-position:center;filter:contrast(1.04) saturate(.92)}
+.duo::before{content:"";position:absolute;inset:0;background:var(--duo);mix-blend-mode:color;opacity:.62}
+.duo::after{content:"";position:absolute;inset:0;background:var(--ac);mix-blend-mode:multiply;opacity:.16}
+.rise{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.19,1,.22,1),transform .9s cubic-bezier(.19,1,.22,1)}
+.rise.in{opacity:1;transform:none}
 /* NAV */
-.nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;padding:16px 22px;transition:.35s}
-.nav.solid{background:rgba(255,255,255,.82);backdrop-filter:blur(14px);box-shadow:0 6px 24px rgba(0,0,0,.06)}
-.brand{font-family:Sora;font-weight:800;font-size:20px;color:#fff;transition:.35s;display:flex;align-items:center;gap:9px}
-.brand .b-dot{width:11px;height:11px;border-radius:50%;background:var(--c)}
-.nav.solid .brand{color:var(--ink)}
-.nav-cta{background:var(--c);color:#fff;font-weight:600;font-size:14px;padding:11px 20px;border-radius:999px;box-shadow:0 8px 22px rgba(0,0,0,.18);transition:transform .15s}
-.nav-cta:hover{transform:translateY(-2px)}
+.nav{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:22px 30px;color:var(--paper);transition:.4s}
+.nav.solid{background:var(--paper);color:var(--ink);box-shadow:0 1px 0 var(--line);padding:15px 30px}
+.wordmark{font-family:Fraunces;font-weight:600;font-size:23px;letter-spacing:-.01em}
+.nav .menu-links{display:flex;gap:30px;align-items:center}
+.nav .menu-links a{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.nav .call{border:1px solid currentColor;padding:9px 18px;border-radius:2px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
 /* HERO */
-.hero{position:relative;min-height:100vh;display:flex;align-items:center;color:#fff;overflow:hidden}
-.hero-bg{position:absolute;inset:0;background-image:linear-gradient(120deg,rgba(10,10,15,.82),rgba(10,10,15,.35)),url("%%HEROIMG%%");background-size:cover;background-position:center;transform:scale(1.06);animation:zoom 18s ease-in-out infinite alternate}
-@keyframes zoom{to{transform:scale(1)}}
-.hero-inner{position:relative;z-index:2;padding:120px 0 80px}
-.eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);padding:8px 16px;border-radius:999px;font-size:13px;font-weight:600;margin-bottom:22px;backdrop-filter:blur(6px)}
-.hero h1{font-size:clamp(38px,7vw,74px);font-weight:800;max-width:15ch;margin-bottom:20px}
-.hero p.lead{font-size:clamp(17px,2.4vw,22px);max-width:56ch;opacity:.92;margin-bottom:34px;font-weight:400}
-.btn-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-.btn{display:inline-flex;align-items:center;gap:10px;font-weight:600;font-size:16px;padding:16px 30px;border-radius:14px;transition:transform .15s,box-shadow .15s}
-.btn-wa{background:#25D366;color:#fff;box-shadow:0 12px 34px rgba(37,211,102,.4)}
-.btn-wa:hover{transform:translateY(-3px)}
-.btn-ghost{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.3)}
-.hero .rate{margin-top:30px;display:flex;align-items:center;gap:12px;font-size:15px;opacity:.95}
-.hero .rate .st{color:#ffce31;letter-spacing:2px}
-.scrolld{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:2;color:#fff;opacity:.7;font-size:12px;letter-spacing:.2em;text-transform:uppercase}
-/* STATS */
-.stats{background:var(--ink);color:#fff;padding:34px 0}
-.stats .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;text-align:center}
-.stat b{font-family:Sora;font-size:34px;font-weight:800;display:block;background:linear-gradient(120deg,#fff,#c9c9d6);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
-.stat span{font-size:13px;opacity:.6;text-transform:uppercase;letter-spacing:.08em}
-/* SECTIONS */
-section.pad{padding:96px 0}
-.khead{text-align:center;max-width:640px;margin:0 auto 54px}
-.ktag{color:var(--c);font-weight:700;font-size:13px;letter-spacing:.14em;text-transform:uppercase;margin-bottom:12px}
-.khead h2{font-size:clamp(28px,4vw,44px);font-weight:800;margin-bottom:14px}
-.khead p{color:var(--muted);font-size:17px}
-.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
-.mcard{background:var(--bg);border:1px solid #ededf2;border-radius:var(--radius);overflow:hidden;transition:transform .3s,box-shadow .3s}
-.mcard:hover{transform:translateY(-8px);box-shadow:0 26px 60px rgba(0,0,0,.13)}
-.mcard .ph{height:190px;background-size:cover;background-position:center}
-.mcard .bd{padding:22px 22px 26px}
-.mcard h3{font-size:20px;font-weight:700;margin-bottom:6px}
-.mcard p{color:var(--muted);font-size:14px}
-.mcard .tagp{display:inline-block;margin-top:14px;color:var(--c);font-weight:700;font-size:14px}
-/* ABOUT */
-.about{display:grid;grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
-.about .ph{border-radius:var(--radius);height:420px;background-size:cover;background-position:center;box-shadow:0 30px 70px rgba(0,0,0,.18)}
-.about h2{font-size:clamp(26px,3.6vw,40px);font-weight:800;margin-bottom:18px}
-.about p{color:#4b4b55;font-size:16.5px;margin-bottom:16px}
-.checks{list-style:none;margin-top:22px;display:grid;gap:12px}
-.checks li{display:flex;gap:12px;align-items:flex-start;font-weight:500}
-.checks .ck{flex:none;width:24px;height:24px;border-radius:50%;background:var(--c);color:#fff;display:grid;place-items:center;font-size:13px}
-/* DEPO */
-.depo{background:var(--soft)}
-.dgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
-.dcard{background:#fff;border-radius:var(--radius);padding:30px;box-shadow:0 10px 34px rgba(0,0,0,.05)}
-.dcard .st{color:#ffb400;letter-spacing:2px;margin-bottom:14px}
-.dcard p{font-size:15.5px;color:#3a3a44;margin-bottom:20px}
-.who{display:flex;align-items:center;gap:12px}
-.who img{width:46px;height:46px;border-radius:50%}
-.who b{font-size:15px}.who span{font-size:13px;color:var(--muted)}
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:var(--paper);overflow:hidden}
+.hero .bg{position:absolute;inset:0}
+.hero .bg.duo::after{opacity:.28}
+.scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.15) 45%,rgba(0,0,0,.35) 100%)}
+.hero-in{position:relative;z-index:2;padding:0 0 8vh;max-width:900px}
+.hero .kick{opacity:.9;margin-bottom:22px}
+.hero h1{font-weight:340;font-size:clamp(46px,9vw,116px);line-height:.96;letter-spacing:-.025em;margin-bottom:26px}
+.hero h1 em{font-style:italic;font-weight:420}
+.hero .lead{font-size:clamp(17px,2.1vw,21px);max-width:52ch;opacity:.94;margin-bottom:36px}
+.actions{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.solid-btn{background:var(--ac);color:#fff;padding:16px 30px;border-radius:2px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;transition:transform .2s}
+.solid-btn:hover{transform:translateY(-2px)}
+.text-link{font-size:13px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:3px}
+.hero .meta{position:absolute;right:0;bottom:8vh;z-index:2;text-align:right;font-size:13px;letter-spacing:.05em;opacity:.9;line-height:1.9}
+.hero .meta .stars{color:#e9b949;letter-spacing:3px;font-size:15px}
+/* STRIP */
+.strip{background:var(--ink);color:var(--paper)}
+.strip .wrap{display:flex;flex-wrap:wrap;gap:10px 46px;justify-content:center;padding:17px 30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.92}
+.strip b{color:var(--ac);font-weight:600}
+/* MENU / editorial list */
+.sec{padding:120px 0}
+.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:54px}
+.sechead h2{font-weight:340;font-size:clamp(32px,5vw,60px);line-height:1;letter-spacing:-.02em}
+.sechead h2 em{font-style:italic}
+.sechead .kick{color:var(--ac);opacity:.9;margin-bottom:14px}
+.menu-wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:start}
+.mlist{display:flex;flex-direction:column}
+.mitem{display:grid;grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.mitem:first-child{padding-top:0}
+.mitem .nm{font-family:Fraunces;font-weight:500;font-size:23px;letter-spacing:-.01em}
+.mitem .pr{font-family:Fraunces;font-size:19px;color:var(--ac);white-space:nowrap}
+.mitem .ds{grid-column:1/-1;font-size:14.5px;color:rgba(0,0,0,.55);max-width:52ch;margin-top:2px}
+.menu-photo{height:100%;min-height:520px;border-radius:2px}
+/* FEATURE quote */
+.feature{background:var(--ink);color:var(--paper)}
+.feature .wrap{padding:130px 30px;text-align:center}
+.feature .kick{color:var(--ac);margin-bottom:30px}
+.feature blockquote{font-family:Fraunces;font-weight:320;font-style:italic;font-size:clamp(26px,4.4vw,50px);line-height:1.22;letter-spacing:-.01em;max-width:20ch;margin:0 auto 34px}
+.feature cite{font-style:normal;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.65}
+/* ABOUT split */
+.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:0;align-items:stretch}
+.about .ph{min-height:600px}
+.about .tx{padding:min(9vw,120px) clamp(30px,6vw,90px);display:flex;flex-direction:column;justify-content:center}
+.about .kick{color:var(--ac);margin-bottom:20px}
+.about h2{font-family:Fraunces;font-weight:340;font-size:clamp(30px,4vw,50px);line-height:1.05;letter-spacing:-.02em;margin-bottom:26px}
+.about p{font-size:16.5px;color:rgba(0,0,0,.7);margin-bottom:18px;max-width:50ch}
+.about .signs{display:flex;gap:40px;margin-top:26px;flex-wrap:wrap}
+.about .signs b{font-family:Fraunces;font-size:38px;font-weight:500;display:block;line-height:1}
+.about .signs span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.5)}
 /* LOCAL */
-.local{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:var(--radius);overflow:hidden;box-shadow:0 24px 60px rgba(0,0,0,.12)}
-.local .map{min-height:440px}
-.local .map iframe{width:100%;height:100%;border:0;min-height:440px}
-.local .info{background:var(--ink);color:#fff;padding:48px}
-.local .info h2{font-size:30px;font-weight:800;margin-bottom:26px}
-.irow{display:flex;gap:14px;margin-bottom:22px}
-.irow .ic{flex:none;width:42px;height:42px;border-radius:12px;background:rgba(255,255,255,.1);display:grid;place-items:center;font-size:19px}
-.irow b{display:block;font-size:12px;text-transform:uppercase;letter-spacing:.1em;opacity:.55;margin-bottom:2px}
-.irow span{font-size:15.5px}
+.local{display:grid;grid-template-columns:1fr 1fr}
+.local .map iframe{width:100%;height:100%;min-height:520px;border:0;filter:grayscale(.35) contrast(1.05)}
+.local .info{background:var(--ink);color:var(--paper);padding:min(8vw,96px) clamp(30px,5vw,72px);display:flex;flex-direction:column;justify-content:center}
+.local .info h2{font-family:Fraunces;font-weight:340;font-size:clamp(28px,3.6vw,46px);margin-bottom:40px;letter-spacing:-.02em}
+.lrow{padding:20px 0;border-top:1px solid rgba(255,255,255,.16)}
+.lrow:last-of-type{border-bottom:1px solid rgba(255,255,255,.16)}
+.lrow .k{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);margin-bottom:5px}
+.lrow .v{font-size:16.5px}
+.local .info .solid-btn{margin-top:34px;align-self:flex-start}
 /* CTA */
-.cta{background:linear-gradient(120deg,var(--c),var(--c2));color:#fff;text-align:center;padding:84px 0}
-.cta h2{font-size:clamp(28px,4vw,46px);font-weight:800;margin-bottom:16px}
-.cta p{font-size:18px;opacity:.92;margin-bottom:30px}
-.cta .btn-wa{background:#fff;color:var(--c)}
+.cta{position:relative;color:var(--paper);text-align:center;overflow:hidden}
+.cta .bg{position:absolute;inset:0}
+.cta .scrim{background:rgba(10,6,4,.62)}
+.cta .wrap{position:relative;z-index:2;padding:150px 30px}
+.cta h2{font-family:Fraunces;font-weight:340;font-size:clamp(34px,6vw,74px);line-height:1;letter-spacing:-.02em;margin-bottom:26px}
+.cta h2 em{font-style:italic}
+.cta p{opacity:.9;margin-bottom:36px;font-size:18px}
 /* FOOT */
-footer{background:#0d0d12;color:#8b8b98;padding:52px 0 40px;text-align:center}
-footer .fb{font-family:Sora;font-weight:800;color:#fff;font-size:22px;margin-bottom:8px}
-footer .cred{margin-top:20px;font-size:12.5px;opacity:.5}
-/* FLOAT */
-.fab{position:fixed;bottom:22px;right:22px;z-index:60;width:62px;height:62px;border-radius:50%;background:#25D366;display:grid;place-items:center;box-shadow:0 12px 30px rgba(37,211,102,.5);animation:pulse 2.4s infinite}
-.fab svg{width:32px;height:32px;fill:#fff}
-@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.5)}70%{box-shadow:0 0 0 18px rgba(37,211,102,0)}100%{box-shadow:0 0 0 0 rgba(37,211,102,0)}}
-@media(max-width:860px){.menu,.dgrid{grid-template-columns:1fr 1fr}.stats .grid{grid-template-columns:1fr 1fr;gap:26px}.about,.local{grid-template-columns:1fr}.about .ph{height:280px}.local .map iframe{min-height:300px}}
-@media(max-width:560px){.menu,.dgrid{grid-template-columns:1fr}.hero-inner{padding-top:104px}}
+footer{background:var(--paper);color:var(--ink);padding:70px 30px 48px;border-top:1px solid var(--line)}
+footer .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;align-items:flex-end}
+footer .wordmark{font-size:30px}
+footer .fmeta{text-align:right;font-size:14px;line-height:1.9;color:rgba(0,0,0,.6)}
+footer .rule{height:1px;background:var(--line);margin:34px 0 20px}
+footer .cred{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.4)}
+/* FAB */
+.fab{position:fixed;right:22px;bottom:22px;z-index:50;background:var(--ink);color:var(--paper);border-radius:2px;padding:14px 20px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.25);transition:transform .2s}
+.fab:hover{transform:translateY(-2px)}
+@media(max-width:900px){.menu-wrap{grid-template-columns:1fr;gap:44px}.menu-photo{min-height:340px;order:-1}.about{grid-template-columns:1fr}.about .ph{min-height:360px}.local{grid-template-columns:1fr}.nav .menu-links{display:none}.hero .meta{display:none}}
 </style></head><body>
 
 <nav class="nav" id="nav">
-<div class="brand"><span class="b-dot"></span>%%NOME%%</div>
-<a class="nav-cta" href="%%WA%%">Falar no WhatsApp</a>
+  <div class="wordmark">%%NOME%%</div>
+  <div class="menu-links">
+    <a href="#menu">%%NAVSEC%%</a>
+    <a href="#sobre">História</a>
+    <a href="#visitar">Visitar</a>
+    <a class="call" href="%%WA%%">WhatsApp</a>
+  </div>
 </nav>
 
 <header class="hero">
-<div class="hero-bg"></div>
-<div class="wrap hero-inner">
-<span class="eyebrow">★ %%TIPO%% %%BADGELOC%%</span>
-<h1>%%NOME%%</h1>
-<p class="lead">%%TAGLINE%%</p>
-<div class="btn-row">
-<a class="btn btn-wa" href="%%WA%%">📲 Fazer pedido agora</a>
-<a class="btn btn-ghost" href="#cardapio">Ver %%DESTLABEL%%</a>
-</div>
-<div class="rate"><span class="st">★★★★★</span> <span>%%NOTA%% no Google · %%AVAL%% avaliações</span></div>
-</div>
-<div class="scrolld">role para descobrir ↓</div>
+  <div class="bg duo" style="background-image:url('%%HEROIMG%%')"></div>
+  <div class="scrim"></div>
+  <div class="wrap hero-in">
+    <div class="kick rise">%%TIPO%% · %%CIDADE%%</div>
+    <h1 class="f rise">%%HEADLINE%%</h1>
+    <p class="lead rise">%%TAGLINE%%</p>
+    <div class="actions rise">
+      <a class="solid-btn" href="%%WA%%">Fazer um pedido</a>
+      <a class="text-link" href="#menu">Ver %%NAVSEC%%</a>
+    </div>
+  </div>
+  <div class="wrap"><div class="meta"><div class="stars">%%STARS%%</div>%%NOTA%% · %%AVAL%% avaliações no Google</div></div>
 </header>
 
-<div class="stats"><div class="wrap"><div class="grid">
-<div class="stat reveal"><b>%%NOTA%%</b><span>Nota no Google</span></div>
-<div class="stat reveal"><b>%%AVAL%%+</b><span>Clientes felizes</span></div>
-<div class="stat reveal"><b>%%ANOS%%</b><span>De história</span></div>
-<div class="stat reveal"><b>100%</b><span>Feito com amor</span></div>
-</div></div></div>
+<div class="strip"><div class="wrap">
+  <span>%%STRIP1%%</span><span><b>·</b></span><span>%%HORARIO%%</span><span><b>·</b></span><span>%%CIDADE%%</span>
+</div></div>
 
-<section class="pad" id="cardapio"><div class="wrap">
-<div class="khead reveal"><div class="ktag">%%DESTTAG%%</div><h2>%%DESTTITULO%%</h2><p>%%DESTSUB%%</p></div>
-<div class="menu">%%ITENS%%</div>
+<section class="sec" id="menu"><div class="wrap">
+  <div class="sechead rise"><div><div class="kick">%%MENUKICK%%</div><h2 class="f">%%MENUTITLE%%</h2></div></div>
+  <div class="menu-wrap">
+    <div class="mlist">%%ITENS%%</div>
+    <div class="menu-photo duo rise" style="background-image:url('%%MENUIMG%%')"></div>
+  </div>
 </div></section>
 
-<section class="pad" style="background:var(--soft)"><div class="wrap">
-<div class="about">
-<div class="ph reveal" style="background-image:url('%%ABOUTIMG%%')"></div>
-<div class="reveal">
-<div class="ktag">Sobre nós</div>
-<h2>Uma experiência que o seu bairro confia</h2>
-<p>%%SOBRE%%</p>
-<ul class="checks">
-<li><span class="ck">✓</span> Atendimento rápido e caprichado, do pedido à entrega</li>
-<li><span class="ck">✓</span> Qualidade reconhecida com %%NOTA%%★ e %%AVAL%% avaliações</li>
-<li><span class="ck">✓</span> Peça em segundos direto pelo WhatsApp</li>
-</ul>
-</div>
-</div>
+<section class="feature"><div class="wrap rise">
+  <div class="kick">O que dizem</div>
+  <blockquote class="f">%%QUOTE%%</blockquote>
+  <cite>%%QUOTEWHO%% — cliente</cite>
 </div></section>
 
-<section class="pad depo"><div class="wrap">
-<div class="khead reveal"><div class="ktag">Depoimentos</div><h2>Quem conhece, recomenda</h2><p>Avaliações reais de quem já é cliente</p></div>
-<div class="dgrid">%%DEPO%%</div>
-</div></section>
+<section class="about" id="sobre">
+  <div class="ph duo rise" style="background-image:url('%%ABOUTIMG%%')"></div>
+  <div class="tx">
+    <div class="kick rise">A casa</div>
+    <h2 class="rise">%%ABOUTTITLE%%</h2>
+    <p class="rise">%%SOBRE%%</p>
+    <div class="signs rise">
+      <div><b class="f">%%NOTA%%</b><span>no Google</span></div>
+      <div><b class="f">%%AVAL%%+</b><span>clientes</span></div>
+      <div><b class="f">%%ANOS%%</b><span>de casa</span></div>
+    </div>
+  </div>
+</section>
 
-<section class="pad"><div class="wrap">
-<div class="local">
-<div class="map">%%MAP%%</div>
-<div class="info">
-<h2>Venha nos visitar</h2>
-<div class="irow"><div class="ic">📍</div><div><b>Endereço</b><span>%%ENDERECO%%</span></div></div>
-<div class="irow"><div class="ic">🕒</div><div><b>Horário</b><span>%%HORARIO%%</span></div></div>
-<div class="irow"><div class="ic">📱</div><div><b>Contato</b><span>%%TELDISP%%</span></div></div>
-<a class="btn btn-wa" style="margin-top:8px" href="%%WA%%">Chamar no WhatsApp</a>
-</div>
-</div>
-</div></section>
+<section class="local" id="visitar">
+  <div class="map">%%MAP%%</div>
+  <div class="info">
+    <h2 class="f">Onde a gente fica</h2>
+    <div class="lrow"><div class="k">Endereço</div><div class="v">%%ENDERECO%%</div></div>
+    <div class="lrow"><div class="k">Horário</div><div class="v">%%HORARIO%%</div></div>
+    <div class="lrow"><div class="k">WhatsApp</div><div class="v">%%TELDISP%%</div></div>
+    <a class="solid-btn" href="%%WA%%">Chamar no WhatsApp</a>
+  </div>
+</section>
 
-<section class="cta"><div class="wrap reveal">
-<h2>Bateu a vontade?</h2>
-<p>Faça seu pedido agora — é rápido, fácil e direto no WhatsApp.</p>
-<a class="btn btn-wa" href="%%WA%%">📲 Pedir pelo WhatsApp</a>
-</div></section>
+<section class="cta">
+  <div class="bg duo" style="background-image:url('%%CTAIMG%%')"></div>
+  <div class="scrim"></div>
+  <div class="wrap">
+    <h2 class="f">Bateu a <em>fome</em>?</h2>
+    <p>Faça seu pedido agora, direto no WhatsApp. Rápido e sem complicação.</p>
+    <a class="solid-btn" href="%%WA%%">Pedir agora</a>
+  </div>
+</section>
 
 <footer><div class="wrap">
-<div class="fb">%%NOME%%</div>
-<div>%%ENDERECO%% · %%CIDADE%%</div>
-<div style="margin-top:6px">%%TELDISP%%</div>
-<div class="cred">Site desenvolvido sob medida · prévia exclusiva para %%NOME%%</div>
+  <div class="top">
+    <div class="wordmark f">%%NOME%%</div>
+    <div class="fmeta">%%ENDERECO%%<br>%%CIDADE%% · %%TELDISP%%<br>%%HORARIO%%</div>
+  </div>
+  <div class="rule"></div>
+  <div class="cred">Prévia de site · %%NOME%%</div>
 </div></footer>
 
-<a class="fab" href="%%WA%%" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163a11.867 11.867 0 01-1.587-5.945C.16 5.335 5.495 0 12.05 0a11.82 11.82 0 018.413 3.488 11.82 11.82 0 013.48 8.414c-.003 6.557-5.338 11.892-11.893 11.892a11.9 11.9 0 01-5.688-1.448L.057 24zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884a9.86 9.86 0 001.517 5.26l-.999 3.648 3.971-1.007zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.767.967-.94 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.71.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg></a>
+<a class="fab" href="%%WA%%">WhatsApp</a>
 
 <script>
 document.addEventListener('DOMContentLoaded',function(){
-var nav=document.getElementById('nav');
-function s(){nav.classList.toggle('solid',window.scrollY>60)}
-s();window.addEventListener('scroll',s,{passive:true});
-var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}})},{threshold:.14});
-document.querySelectorAll('.reveal').forEach(function(el){io.observe(el)});
+  var nav=document.getElementById('nav');
+  function s(){nav.classList.toggle('solid',scrollY>60)} s();
+  addEventListener('scroll',s,{passive:true});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var el=e.target;var sibs=[].slice.call(el.parentNode.querySelectorAll('.rise'));var i=Math.max(0,sibs.indexOf(el));el.style.transitionDelay=(i*90)+'ms';el.classList.add('in');io.unobserve(el);}})},{threshold:.15});
+  document.querySelectorAll('.rise').forEach(function(el){io.observe(el)});
 });
 </script>
 </body></html>"""
+
+
+def img(kw, lock):
+    return "https://loremflickr.com/1600/1200/%s?lock=%d" % (kw, lock)
 
 
 def render(L):
@@ -279,74 +313,86 @@ def render(L):
     nome = L.get("nome", "Seu Negócio")
     tipo = L.get("tipo", "Negócio")
     cidade = L.get("cidade", "")
-    bairro = L.get("bairro", "")
     endereco = L.get("endereco", cidade)
-    cat = kw_for(tipo)
-    lock = abs(hash(L.get("slug") or nome)) % 900 + 10
-    heroimg = "https://loremflickr.com/1600/900/%s?lock=%d" % (cat, lock)
-    aboutimg = "https://loremflickr.com/900/700/%s?lock=%d" % (cat, lock + 3)
-    wa_msg = "Ola! Vim pelo site de voces e quero fazer um pedido :)"
+    ac, duo, paper, ink = palette_for(tipo, L)
+    kw = kw_for(tipo)
+    base = abs(hash(L.get("slug") or nome))
+    lock = base % 900 + 10
+    wa_msg = "Ola! Vim pelo site de voces e queria fazer um pedido."
     wa = "https://wa.me/%s?text=%s" % (tel, urllib.parse.quote(wa_msg)) if tel else "#"
-    # menu / services cards with images
-    itens = L.get("itens", []) or ["Qualidade garantida"]
-    cards = ""
-    for i, it in enumerate(itens):
-        ikw = urllib.parse.quote(it.split()[0]) + "," + cat.split(",")[0]
-        img = "https://loremflickr.com/600/400/%s?lock=%d" % (ikw, lock + 20 + i)
-        cards += ('<div class="mcard reveal"><div class="ph" style="background-image:url(\'%s\')"></div>'
-                  '<div class="bd"><h3>%s</h3><p>Preparado com ingredientes selecionados e todo o capricho da casa.</p>'
-                  '<span class="tagp">Peça no WhatsApp →</span></div></div>') % (img, it)
-    # segment labels
     seg = (tipo or "").lower()
-    if any(k in seg for k in ["pizz", "restaur", "lanch", "hambur", "food", "bar", "caf", "doce", "confeit", "acai", "açaí", "padar"]):
-        dtag, dtitulo, dsub, dlabel = "Nosso cardápio", "Sabores que você vai amar", "Feito na hora, do jeito que você gosta", "cardápio"
-    elif any(k in seg for k in ["barb", "salão", "salao", "estetic", "estét", "beleza", "cabel", "unha", "spa"]):
-        dtag, dtitulo, dsub, dlabel = "Nossos serviços", "Cuidado em cada detalhe", "Profissionais dedicados ao seu melhor visual", "serviços"
+    food = any(k in seg for k in ["pizz", "restaur", "food", "comida", "bar", "boteco", "lanch", "hambur", "caf", "confeit", "doce", "padar", "acai", "açaí", "churrasc", "steak"])
+    if food:
+        navsec, menukick, menutitle = "cardápio", "Do forno à mesa", "O cardápio"
+        cta_word = "fome"
+    elif any(k in seg for k in ["barb", "salão", "salao", "cabel", "beleza", "estetic", "estét", "spa", "unha"]):
+        navsec, menukick, menutitle = "serviços", "Feito à mão", "Os serviços"
+        cta_word = "vontade"
     else:
-        dtag, dtitulo, dsub, dlabel = "O que oferecemos", "Qualidade que faz a diferença", "Soluções sob medida para você", "serviços"
-    # testimonials
-    depo = ""
-    base = abs(hash(nome))
-    for j in range(3):
-        who, quote = DEPO_POOL[(base + j) % len(DEPO_POOL)]
-        av = "https://ui-avatars.com/api/?name=%s&background=random&size=96" % urllib.parse.quote(who)
-        depo += ('<div class="dcard reveal"><div class="st">★★★★★</div><p>“%s”</p>'
-                 '<div class="who"><img src="%s" alt=""><div><b>%s</b><span>Cliente verificado</span></div></div></div>') % (quote, av, who)
-    # map
+        navsec, menukick, menutitle = "serviços", "O que fazemos", "Os serviços"
+        cta_word = "vontade"
+    # menu list (editorial, name + short descriptor, no fake prices)
+    itens = L.get("itens", []) or ["Especialidade da casa"]
+    descs = ["preparado no capricho, do jeito da casa", "receita da casa, feita na hora",
+             "o queridinho de quem já é cliente", "clássico que nunca sai de moda",
+             "pra quem gosta de coisa bem feita", "sob medida, do começo ao fim"]
+    mlist = ""
+    for i, it in enumerate(itens):
+        if isinstance(it, dict):
+            nm = it.get("nome", ""); pr = it.get("preco", ""); ds = it.get("desc", descs[i % len(descs)])
+        else:
+            nm = it; pr = ""; ds = descs[(base + i) % len(descs)]
+        prhtml = '<div class="pr f">%s</div>' % pr if pr else ""
+        mlist += '<div class="mitem"><div class="nm">%s</div>%s<div class="ds">%s</div></div>' % (nm, prhtml, ds)
+    # testimonial (single featured)
+    who, quote = DEPO_POOL[base % len(DEPO_POOL)]
+    # about
+    sobre = L.get("sobre", "Tem gente que passa, e tem gente que fica. A %s nasceu em %s pra ser dessas: um lugar onde cada cliente é recebido pelo nome e cada detalhe é pensado com cuidado. Não é sobre ser mais um — é sobre ser o seu preferido." % (nome, cidade or "sua cidade"))
+    abouttitle = L.get("about_title", "Feito por quem se importa, pra quem sabe a diferença")
+    stars_n = 5
+    try:
+        stars_n = int(round(float(str(L.get("nota", "5")).replace(",", "."))))
+    except Exception:
+        stars_n = 5
+    stars = "★" * max(1, min(5, stars_n)) + "☆" * (5 - max(1, min(5, stars_n)))
     q = urllib.parse.quote("%s, %s" % (endereco, cidade))
-    mapsrc = "https://www.google.com/maps?q=%s&output=embed" % q
-    mapiframe = '<iframe loading="lazy" src="%s" allowfullscreen></iframe>' % mapsrc
-    sobre = L.get("sobre", "Somos referência em %s na região de %s. Cada cliente é tratado como único, com atenção aos detalhes e o compromisso de entregar sempre o melhor. Venha viver essa experiência." % (tipo.lower(), cidade or "sua cidade"))
-    badgeloc = ("· " + bairro + ", " + cidade) if (bairro and cidade) else ("· " + cidade if cidade else "")
+    mapiframe = '<iframe loading="lazy" src="https://www.google.com/maps?q=%s&output=embed" allowfullscreen></iframe>' % q
+    headline = L.get("headline", "%s" % nome)
     reps = {
-        "NOME": nome, "TIPO": tipo, "CIDADE": cidade, "BADGELOC": badgeloc,
-        "TAGLINE": L.get("tagline", "Atendimento de qualidade que o seu bairro confia."),
+        "NOME": nome, "TIPO": tipo, "CIDADE": cidade, "HEADLINE": headline,
+        "TAGLINE": L.get("tagline", "Um clássico do bairro, feito com o cuidado de sempre."),
         "WA": wa, "NOTA": L.get("nota", "5,0"), "AVAL": L.get("avaliacoes", "novas"),
-        "ANOS": L.get("anos", "10 anos"), "HEROIMG": heroimg, "ABOUTIMG": aboutimg,
-        "ITENS": cards, "DEPO": depo, "MAP": mapiframe, "SOBRE": sobre,
-        "DESTTAG": dtag, "DESTTITULO": dtitulo, "DESTSUB": dsub, "DESTLABEL": dlabel,
-        "HORARIO": L.get("horario", "Seg a Sáb, 9h às 19h"), "ENDERECO": endereco,
+        "STARS": stars, "ANOS": L.get("anos", "10 anos"),
+        "HEROIMG": img(kw, lock), "MENUIMG": img(kw, lock + 5), "ABOUTIMG": img(kw, lock + 11), "CTAIMG": img(kw, lock + 17),
+        "NAVSEC": navsec, "MENUKICK": menukick, "MENUTITLE": menutitle, "ITENS": mlist,
+        "QUOTE": quote, "QUOTEWHO": who, "ABOUTTITLE": abouttitle, "SOBRE": sobre,
+        "HORARIO": L.get("horario", "Ter a Dom, 18h às 23h"), "ENDERECO": endereco,
         "TELDISP": L.get("telefone_exibicao", L.get("telefone", "WhatsApp")),
-        "COR": L.get("cor", "#e11d48"), "COR2": L.get("cor2", "#9f1239"),
+        "STRIP1": L.get("strip", "Peça pelo WhatsApp"), "MAP": mapiframe,
+        "COR": ac, "COR2": duo, "PAPER": paper, "INK": ink,
     }
-    html = TEMPLATE
+    html = TEMPLATE.replace("%%CTAWORD%%", cta_word)
     for k, v in reps.items():
         html = html.replace("%%" + k + "%%", str(v))
+    # fix cta word token used inside h2
+    html = html.replace("<em>fome</em>", "<em>%s</em>" % cta_word)
     return html
 
 
 def outreach_msg(L, url):
     nome = L.get("nome", "seu negócio")
     tipo = (L.get("tipo", "negócio")).lower()
+    cidade = L.get("cidade", "")
     nota = L.get("nota", "")
-    aval = L.get("avaliacoes", "")
-    star = (" (%s⭐" % nota + (", %s avaliações" % aval if aval else "") + " — parabéns!)") if nota else ""
+    loc = (" aí em %s" % cidade) if cidade else ""
+    star = (" (%s no Google, parabéns!)" % nota) if nota else ""
     return (
-        "Oi! Tudo bem? 👋 Aqui é o Vitor. Vi a %s *%s* no Google%s e reparei "
-        "que vocês ainda não têm um site próprio.\n\n"
-        "Montei uma prévia sob medida pra vocês — dá uma olhada em como ficou:\n%s\n\n"
-        "Se curtir, coloco no ar hoje mesmo, já pronto pra receber pedidos. Posso te contar como funciona? 🙂"
-    ) % (tipo, nome, star, url)
+        "Oi! Tudo bem? Aqui é o Vitor. Passei pela %s%s%s e vi que vocês ainda "
+        "não têm um site próprio — só o Google e o WhatsApp.\n\n"
+        "Fiz uma prévia de como ficaria o site de vocês. Dá uma olhada:\n%s\n\n"
+        "Se curtir, deixo no ar hoje com o domínio de vocês. Se não fizer sentido, "
+        "sem problema nenhum. Um abraço!"
+    ) % (nome, loc, star, url)
 
 
 def main():
@@ -369,19 +415,19 @@ def main():
     if not chats:
         print("NO CHAT IDS - user must /start the bot"); return
     tg("sendMessage", {"chat_id": chats[0],
-        "text": "🏭 *Lote pronto:* %d prévias no ar.\nToque em *Ver prévia*, depois em *Enviar no WhatsApp*." % len(built),
+        "text": "*Lote pronto:* %d previas no ar.\nToque em *Ver previa*, depois em *Enviar no WhatsApp*." % len(built),
         "parse_mode": "Markdown"})
     for L, url in built:
         tel = re.sub(r"\D", "", L.get("telefone", ""))
         wa = "https://wa.me/%s?text=%s" % (tel, urllib.parse.quote(outreach_msg(L, url))) if tel else url
-        head = "🏪 *%s* — %s" % (L.get("nome", "?"), L.get("cidade", ""))
-        meta = "%s · %s⭐" % (L.get("tipo", ""), L.get("nota", "")) if L.get("nota") else L.get("tipo", "")
+        head = "*%s* — %s" % (L.get("nome", "?"), L.get("cidade", ""))
+        meta = "%s · %s" % (L.get("tipo", ""), L.get("nota", "")) if L.get("nota") else L.get("tipo", "")
         for ch in chats:
             tg("sendMessage", {"chat_id": ch, "text": "%s\n%s" % (head, meta),
                 "parse_mode": "Markdown",
                 "reply_markup": {"inline_keyboard": [[
-                    {"text": "🌐 Ver prévia", "url": url},
-                    {"text": "📲 Enviar no WhatsApp", "url": wa}]]}})
+                    {"text": "Ver previa", "url": url},
+                    {"text": "Enviar no WhatsApp", "url": wa}]]}})
             time.sleep(0.4)
     print("done:", len(built))
 
