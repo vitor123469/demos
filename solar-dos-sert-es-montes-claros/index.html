@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="pt-br"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Solar dos Sertões — Restaurante, Montes Claros</title>
+<meta name="description" content="Solar dos Sertões · Um clássico do bairro, feito com o cuidado de sempre.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..800&family=Archivo:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--ac:#b5341f;--duo:#2a0f08;--paper:#f7efe4;--ink:#1c1210;--line:rgba(0,0,0,.12)}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:Archivo,system-ui,sans-serif;background:var(--paper);color:var(--ink);line-height:1.6;font-size:17px}
+.f{font-family:Fraunces,Georgia,serif}
+a{color:inherit;text-decoration:none}
+img{display:block;max-width:100%}
+.kick{font-size:12px;letter-spacing:.28em;text-transform:uppercase;font-weight:600}
+.wrap{max-width:1160px;margin:0 auto;padding:0 30px}
+.duo{position:relative;background-size:cover;background-position:center;filter:contrast(1.04) saturate(.92)}
+.duo::before{content:"";position:absolute;inset:0;background:var(--duo);mix-blend-mode:color;opacity:.62}
+.duo::after{content:"";position:absolute;inset:0;background:var(--ac);mix-blend-mode:multiply;opacity:.16}
+.rise{opacity:0;transform:translateY(30px);transition:opacity .9s cubic-bezier(.19,1,.22,1),transform .9s cubic-bezier(.19,1,.22,1)}
+.rise.in{opacity:1;transform:none}
+/* NAV */
+.nav{position:fixed;inset:0 0 auto 0;z-index:40;display:flex;justify-content:space-between;align-items:center;padding:22px 30px;color:var(--paper);transition:.4s}
+.nav.solid{background:var(--paper);color:var(--ink);box-shadow:0 1px 0 var(--line);padding:15px 30px}
+.wordmark{font-family:Fraunces;font-weight:600;font-size:23px;letter-spacing:-.01em}
+.nav .menu-links{display:flex;gap:30px;align-items:center}
+.nav .menu-links a{font-size:12.5px;letter-spacing:.16em;text-transform:uppercase;opacity:.85}
+.nav .call{border:1px solid currentColor;padding:9px 18px;border-radius:2px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+/* HERO */
+.hero{position:relative;min-height:100svh;display:flex;align-items:flex-end;color:var(--paper);overflow:hidden}
+.hero .bg{position:absolute;inset:0}
+.hero .bg.duo::after{opacity:.28}
+.scrim{position:absolute;inset:0;background:linear-gradient(0deg,rgba(0,0,0,.7) 0%,rgba(0,0,0,.15) 45%,rgba(0,0,0,.35) 100%)}
+.hero-in{position:relative;z-index:2;padding:0 0 8vh;max-width:900px}
+.hero .kick{opacity:.9;margin-bottom:22px}
+.hero h1{font-weight:340;font-size:clamp(46px,9vw,116px);line-height:.96;letter-spacing:-.025em;margin-bottom:26px}
+.hero h1 em{font-style:italic;font-weight:420}
+.hero .lead{font-size:clamp(17px,2.1vw,21px);max-width:52ch;opacity:.94;margin-bottom:36px}
+.actions{display:flex;gap:26px;align-items:center;flex-wrap:wrap}
+.solid-btn{background:var(--ac);color:#fff;padding:16px 30px;border-radius:2px;font-size:13px;letter-spacing:.16em;text-transform:uppercase;font-weight:600;transition:transform .2s}
+.solid-btn:hover{transform:translateY(-2px)}
+.text-link{font-size:13px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid currentColor;padding-bottom:3px}
+.hero .meta{position:absolute;right:0;bottom:8vh;z-index:2;text-align:right;font-size:13px;letter-spacing:.05em;opacity:.9;line-height:1.9}
+.hero .meta .stars{color:#e9b949;letter-spacing:3px;font-size:15px}
+/* STRIP */
+.strip{background:var(--ink);color:var(--paper)}
+.strip .wrap{display:flex;flex-wrap:wrap;gap:10px 46px;justify-content:center;padding:17px 30px;font-size:12px;letter-spacing:.18em;text-transform:uppercase;opacity:.92}
+.strip b{color:var(--ac);font-weight:600}
+/* MENU / editorial list */
+.sec{padding:120px 0}
+.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;border-bottom:1px solid var(--line);padding-bottom:24px;margin-bottom:54px}
+.sechead h2{font-weight:340;font-size:clamp(32px,5vw,60px);line-height:1;letter-spacing:-.02em}
+.sechead h2 em{font-style:italic}
+.sechead .kick{color:var(--ac);opacity:.9;margin-bottom:14px}
+.menu-wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:70px;align-items:start}
+.mlist{display:flex;flex-direction:column}
+.mitem{display:grid;grid-template-columns:1fr auto;gap:6px 16px;padding:22px 0;border-bottom:1px solid var(--line);align-items:baseline}
+.mitem:first-child{padding-top:0}
+.mitem .nm{font-family:Fraunces;font-weight:500;font-size:23px;letter-spacing:-.01em}
+.mitem .pr{font-family:Fraunces;font-size:19px;color:var(--ac);white-space:nowrap}
+.mitem .ds{grid-column:1/-1;font-size:14.5px;color:rgba(0,0,0,.55);max-width:52ch;margin-top:2px}
+.menu-photo{height:100%;min-height:520px;border-radius:2px}
+/* FEATURE quote */
+.feature{background:var(--ink);color:var(--paper)}
+.feature .wrap{padding:130px 30px;text-align:center}
+.feature .kick{color:var(--ac);margin-bottom:30px}
+.feature blockquote{font-family:Fraunces;font-weight:320;font-style:italic;font-size:clamp(26px,4.4vw,50px);line-height:1.22;letter-spacing:-.01em;max-width:20ch;margin:0 auto 34px}
+.feature cite{font-style:normal;font-size:12.5px;letter-spacing:.2em;text-transform:uppercase;opacity:.65}
+/* ABOUT split */
+.about{display:grid;grid-template-columns:.9fr 1.1fr;gap:0;align-items:stretch}
+.about .ph{min-height:600px}
+.about .tx{padding:min(9vw,120px) clamp(30px,6vw,90px);display:flex;flex-direction:column;justify-content:center}
+.about .kick{color:var(--ac);margin-bottom:20px}
+.about h2{font-family:Fraunces;font-weight:340;font-size:clamp(30px,4vw,50px);line-height:1.05;letter-spacing:-.02em;margin-bottom:26px}
+.about p{font-size:16.5px;color:rgba(0,0,0,.7);margin-bottom:18px;max-width:50ch}
+.about .signs{display:flex;gap:40px;margin-top:26px;flex-wrap:wrap}
+.about .signs b{font-family:Fraunces;font-size:38px;font-weight:500;display:block;line-height:1}
+.about .signs span{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.5)}
+/* LOCAL */
+.local{display:grid;grid-template-columns:1fr 1fr}
+.local .map iframe{width:100%;height:100%;min-height:520px;border:0;filter:grayscale(.35) contrast(1.05)}
+.local .info{background:var(--ink);color:var(--paper);padding:min(8vw,96px) clamp(30px,5vw,72px);display:flex;flex-direction:column;justify-content:center}
+.local .info h2{font-family:Fraunces;font-weight:340;font-size:clamp(28px,3.6vw,46px);margin-bottom:40px;letter-spacing:-.02em}
+.lrow{padding:20px 0;border-top:1px solid rgba(255,255,255,.16)}
+.lrow:last-of-type{border-bottom:1px solid rgba(255,255,255,.16)}
+.lrow .k{font-size:11.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--ac);margin-bottom:5px}
+.lrow .v{font-size:16.5px}
+.local .info .solid-btn{margin-top:34px;align-self:flex-start}
+/* CTA */
+.cta{position:relative;color:var(--paper);text-align:center;overflow:hidden}
+.cta .bg{position:absolute;inset:0}
+.cta .scrim{background:rgba(10,6,4,.62)}
+.cta .wrap{position:relative;z-index:2;padding:150px 30px}
+.cta h2{font-family:Fraunces;font-weight:340;font-size:clamp(34px,6vw,74px);line-height:1;letter-spacing:-.02em;margin-bottom:26px}
+.cta h2 em{font-style:italic}
+.cta p{opacity:.9;margin-bottom:36px;font-size:18px}
+/* FOOT */
+footer{background:var(--paper);color:var(--ink);padding:70px 30px 48px;border-top:1px solid var(--line)}
+footer .top{display:flex;justify-content:space-between;flex-wrap:wrap;gap:24px;align-items:flex-end}
+footer .wordmark{font-size:30px}
+footer .fmeta{text-align:right;font-size:14px;line-height:1.9;color:rgba(0,0,0,.6)}
+footer .rule{height:1px;background:var(--line);margin:34px 0 20px}
+footer .cred{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(0,0,0,.4)}
+/* FAB */
+.fab{position:fixed;right:22px;bottom:22px;z-index:50;background:var(--ink);color:var(--paper);border-radius:2px;padding:14px 20px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;font-weight:600;box-shadow:0 14px 34px rgba(0,0,0,.25);transition:transform .2s}
+.fab:hover{transform:translateY(-2px)}
+@media(max-width:900px){.menu-wrap{grid-template-columns:1fr;gap:44px}.menu-photo{min-height:340px;order:-1}.about{grid-template-columns:1fr}.about .ph{min-height:360px}.local{grid-template-columns:1fr}.nav .menu-links{display:none}.hero .meta{display:none}}
+</style></head><body>
+
+<nav class="nav" id="nav">
+  <div class="wordmark">Solar dos Sertões</div>
+  <div class="menu-links">
+    <a href="#menu">cardápio</a>
+    <a href="#sobre">História</a>
+    <a href="#visitar">Visitar</a>
+    <a class="call" href="https://wa.me/5538999642913?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">WhatsApp</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="bg duo" style="background-image:url('https://loremflickr.com/1600/1200/restaurant,plating,gastronomy?lock=654')"></div>
+  <div class="scrim"></div>
+  <div class="wrap hero-in">
+    <div class="kick rise">Restaurante · Montes Claros</div>
+    <h1 class="f rise">Solar dos Sertões</h1>
+    <p class="lead rise">Um clássico do bairro, feito com o cuidado de sempre.</p>
+    <div class="actions rise">
+      <a class="solid-btn" href="https://wa.me/5538999642913?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">Fazer um pedido</a>
+      <a class="text-link" href="#menu">Ver cardápio</a>
+    </div>
+  </div>
+  <div class="wrap"><div class="meta"><div class="stars">★★★★★</div>4,8 · 212 avaliações no Google</div></div>
+</header>
+
+<div class="strip"><div class="wrap">
+  <span>Peça pelo WhatsApp</span><span><b>·</b></span><span>Ter a Dom, 18h às 23h</span><span><b>·</b></span><span>Montes Claros</span>
+</div></div>
+
+<section class="sec" id="menu"><div class="wrap">
+  <div class="sechead rise"><div><div class="kick">Do forno à mesa</div><h2 class="f">O cardápio</h2></div></div>
+  <div class="menu-wrap">
+    <div class="mlist"><div class="mitem"><div class="nm">Especialidade da casa</div><div class="ds">o queridinho de quem já é cliente</div></div></div>
+    <div class="menu-photo duo rise" style="background-image:url('https://loremflickr.com/1600/1200/restaurant,plating,gastronomy?lock=659')"></div>
+  </div>
+</div></section>
+
+<section class="feature"><div class="wrap rise">
+  <div class="kick">O que dizem</div>
+  <blockquote class="f">Indico de olhos fechados. Chega no ponto, no prazo, e sempre com aquele algo a mais.</blockquote>
+  <cite>Juliana C. — cliente</cite>
+</div></section>
+
+<section class="about" id="sobre">
+  <div class="ph duo rise" style="background-image:url('https://loremflickr.com/1600/1200/restaurant,plating,gastronomy?lock=665')"></div>
+  <div class="tx">
+    <div class="kick rise">A casa</div>
+    <h2 class="rise">Feito por quem se importa, pra quem sabe a diferença</h2>
+    <p class="rise">Tem gente que passa, e tem gente que fica. A Solar dos Sertões nasceu em Montes Claros pra ser dessas: um lugar onde cada cliente é recebido pelo nome e cada detalhe é pensado com cuidado. Não é sobre ser mais um — é sobre ser o seu preferido.</p>
+    <div class="signs rise">
+      <div><b class="f">4,8</b><span>no Google</span></div>
+      <div><b class="f">212+</b><span>clientes</span></div>
+      <div><b class="f">10 anos</b><span>de casa</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="local" id="visitar">
+  <div class="map"><iframe loading="lazy" src="https://www.google.com/maps?q=Pra%C3%A7a%20Dr.%20Chaves%20-%20Centro%2C%20Montes%20Claros%20-%20MG%2C%2039400-005%2C%20Brasil%2C%20Montes%20Claros&output=embed" allowfullscreen></iframe></div>
+  <div class="info">
+    <h2 class="f">Onde a gente fica</h2>
+    <div class="lrow"><div class="k">Endereço</div><div class="v">Praça Dr. Chaves - Centro, Montes Claros - MG, 39400-005, Brasil</div></div>
+    <div class="lrow"><div class="k">Horário</div><div class="v">Ter a Dom, 18h às 23h</div></div>
+    <div class="lrow"><div class="k">WhatsApp</div><div class="v">+55 38 99964-2913</div></div>
+    <a class="solid-btn" href="https://wa.me/5538999642913?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">Chamar no WhatsApp</a>
+  </div>
+</section>
+
+<section class="cta">
+  <div class="bg duo" style="background-image:url('https://loremflickr.com/1600/1200/restaurant,plating,gastronomy?lock=671')"></div>
+  <div class="scrim"></div>
+  <div class="wrap">
+    <h2 class="f">Bateu a <em>fome</em>?</h2>
+    <p>Faça seu pedido agora, direto no WhatsApp. Rápido e sem complicação.</p>
+    <a class="solid-btn" href="https://wa.me/5538999642913?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">Pedir agora</a>
+  </div>
+</section>
+
+<footer><div class="wrap">
+  <div class="top">
+    <div class="wordmark f">Solar dos Sertões</div>
+    <div class="fmeta">Praça Dr. Chaves - Centro, Montes Claros - MG, 39400-005, Brasil<br>Montes Claros · +55 38 99964-2913<br>Ter a Dom, 18h às 23h</div>
+  </div>
+  <div class="rule"></div>
+  <div class="cred">Prévia de site · Solar dos Sertões</div>
+</div></footer>
+
+<a class="fab" href="https://wa.me/5538999642913?text=Ola%21%20Vim%20pelo%20site%20de%20voces%20e%20queria%20fazer%20um%20pedido.">WhatsApp</a>
+
+<script>
+document.addEventListener('DOMContentLoaded',function(){
+  var nav=document.getElementById('nav');
+  function s(){nav.classList.toggle('solid',scrollY>60)} s();
+  addEventListener('scroll',s,{passive:true});
+  var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var el=e.target;var sibs=[].slice.call(el.parentNode.querySelectorAll('.rise'));var i=Math.max(0,sibs.indexOf(el));el.style.transitionDelay=(i*90)+'ms';el.classList.add('in');io.unobserve(el);}})},{threshold:.15});
+  document.querySelectorAll('.rise').forEach(function(el){io.observe(el)});
+});
+</script>
+</body></html>
