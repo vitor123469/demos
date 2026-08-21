@@ -3,6 +3,11 @@ on:
   push:
     paths: ['data/leads.json']
   workflow_dispatch:
+    inputs:
+      enviar:
+        description: 'Enviar cards no Telegram? (sim/nao)'
+        required: false
+        default: 'sim'
 permissions:
   contents: write
 concurrency:
@@ -15,4 +20,5 @@ jobs:
       - name: build_and_notify
         env:
           TG: ${{ secrets.TG_BOT_TOKEN }}
+          SEND: ${{ inputs.enviar == 'nao' && '0' || '1' }}
         run: python3 build.py
