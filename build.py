@@ -49,37 +49,66 @@ def resolve_chats():
     return ids
 
 
-# palette per niche: (accent, accent2 for duotone, paper, ink)
-def palette_for(tipo, L):
+# classify niche into a segment. ORDER MATTERS: check "barb" before any
+# food token, because "bar" is a substring of "barbearia"/"barbeiro".
+def seg_of(tipo):
     s = (tipo or "").lower()
+    if "barb" in s:
+        return "barbearia"
+    if any(k in s for k in ["salão", "salao", "cabel", "beleza", "hair", "estetic", "estét",
+                            "spa", "unha", "manicure", "sobrancelha", "depila", "maquiag",
+                            "clinic", "clín", "odont", "dent", "fisio", "massag"]):
+        return "beleza"
+    if any(k in s for k in ["academ", "fit", "cross", "gym", "pilates", "yoga", "muscul", "treino"]):
+        return "fitness"
+    if any(k in s for k in ["pet", "veterin", "tosa", "aquar", "agropec"]):
+        return "pet"
+    if any(k in s for k in ["oficina", "mecân", "mecan", "funilar", "borrachar",
+                            "auto center", "autocenter", "auto elétr", "auto pe", "auto som"]):
+        return "auto"
+    if any(k in s for k in ["pizz", "restaur", "comida", "food", "boteco", "lanch", "hambur",
+                            "burg", "churrasc", "steak", "carne", "sush", "japon", "marmit",
+                            "pastel", "espet", "acai", "açaí", "sorvet", "gelat", "caf",
+                            "confeit", "doce", "padar", "bake", "bistr", "cozinha", "gastr",
+                            "pub", "bar"]):
+        return "comida"
+    return "servico"
+
+
+# palette per segment: (accent, accent2 for duotone, paper, ink)
+def palette_for(tipo, L):
     if L.get("cor"):
         return (L["cor"], L.get("cor2", "#20140f"), L.get("paper", "#f6efe6"), L.get("ink", "#1c1512"))
-    if any(k in s for k in ["pizz", "restaur", "food", "comida", "bar", "boteco", "lanch", "hambur", "churrasc", "steak"]):
-        return ("#b5341f", "#2a0f08", "#f7efe4", "#1c1210")      # terracotta / warm
-    if any(k in s for k in ["caf", "confeit", "doce", "padar", "bake", "bistr"]):
-        return ("#8a5a2b", "#241608", "#f6eee2", "#211812")      # coffee / caramel
-    if any(k in s for k in ["barb"]):
-        return ("#b8823c", "#0f0f10", "#efece6", "#141416")      # brass on charcoal
-    if any(k in s for k in ["salão", "salao", "cabel", "beleza", "hair", "estetic", "estét", "spa", "unha", "clinic", "clín"]):
-        return ("#9a7b5a", "#221a16", "#f4efe9", "#201915")      # nude / warm taupe
-    if any(k in s for k in ["academ", "fit", "cross", "gym"]):
-        return ("#c6402e", "#101215", "#eef0f2", "#14171b")
-    return ("#9a5b34", "#1e1712", "#f5efe7", "#1d1712")
+    return {
+        "comida":    ("#b5341f", "#2a0f08", "#f7efe4", "#1c1210"),   # terracotta / warm
+        "barbearia": ("#b8823c", "#0f0f10", "#efece6", "#141416"),   # brass on charcoal
+        "beleza":    ("#9a7b5a", "#221a16", "#f4efe9", "#201915"),   # nude / warm taupe
+        "fitness":   ("#c6402e", "#101215", "#eef0f2", "#14171b"),   # red on slate
+        "pet":       ("#2f8f86", "#0f1c1b", "#eef4f2", "#13201e"),   # teal / warm
+        "auto":      ("#c56a1f", "#111417", "#eef0f1", "#15181c"),   # amber on graphite
+        "servico":   ("#9a5b34", "#1e1712", "#f5efe7", "#1d1712"),   # copper / neutral
+    }[seg_of(tipo)]
 
 
 def kw_for(tipo):
+    seg = seg_of(tipo)
     s = (tipo or "").lower()
-    if "pizz" in s: return "pizza,pizzeria,dough"
-    if any(k in s for k in ["hambur", "lanch", "burg"]): return "burger,gourmet"
-    if any(k in s for k in ["churrasc", "steak", "carne"]): return "steak,grill,meat"
-    if any(k in s for k in ["restaur", "food", "comida", "bar", "boteco"]): return "restaurant,plating,gastronomy"
-    if any(k in s for k in ["caf", "confeit", "doce", "padar", "bake"]): return "cafe,bakery,pastry"
-    if any(k in s for k in ["acai", "açaí", "sorvet"]): return "acai,bowl,fruit"
-    if "barb" in s: return "barbershop,barber,grooming"
-    if any(k in s for k in ["salão", "salao", "cabel", "beleza", "hair"]): return "hairstyle,salon"
-    if any(k in s for k in ["estetic", "estét", "spa", "unha", "clinic", "clín"]): return "spa,skincare,wellness"
-    if any(k in s for k in ["academ", "fit", "cross", "gym"]): return "gym,training,athlete"
-    return "storefront,craft,artisan"
+    if seg == "comida":
+        if "pizz" in s: return "pizza,pizzeria,dough"
+        if any(k in s for k in ["hambur", "burg", "lanch"]): return "burger,gourmet"
+        if any(k in s for k in ["churrasc", "steak", "carne", "espet"]): return "steak,grill,meat"
+        if any(k in s for k in ["sush", "japon"]): return "sushi,japanese,food"
+        if any(k in s for k in ["acai", "açaí", "sorvet", "gelat"]): return "acai,bowl,fruit"
+        if any(k in s for k in ["caf", "confeit", "doce", "padar", "bake"]): return "cafe,bakery,pastry"
+        return "restaurant,plating,gastronomy"
+    return {
+        "barbearia": "barbershop,barber,grooming",
+        "beleza":    "salon,beauty,hairstyle",
+        "fitness":   "gym,training,athlete",
+        "pet":       "petshop,dog,grooming",
+        "auto":      "garage,mechanic,car",
+        "servico":   "storefront,craft,artisan",
+    }[seg]
 
 
 DEPO_POOL = [
@@ -90,6 +119,53 @@ DEPO_POOL = [
     ("Carla R.", "Atendimento de gente que gosta do que faz. Voltei três vezes só esse mês."),
     ("Diego F.", "Simples assim: superou o que eu esperava. Recomendo pra qualquer um do bairro."),
 ]
+
+
+# per-segment copy so a barbershop never says "cardápio"/"fazer um pedido"
+SEG_COPY = {
+    "comida": dict(
+        navsec="cardápio", menukick="Do forno à mesa", menutitle="O cardápio",
+        herobtn="Fazer um pedido", ctalead="Bateu a", ctaword="fome",
+        ctap="Faça seu pedido agora, direto no WhatsApp. Rápido e sem complicação.",
+        ctabtn="Pedir agora", waverb="fazer um pedido", strip="Peça pelo WhatsApp",
+        horario="Ter a Dom, 18h às 23h", itens=["Especialidade da casa", "Os clássicos", "Feito na hora"]),
+    "barbearia": dict(
+        navsec="serviços", menukick="Na cadeira", menutitle="Os serviços",
+        herobtn="Agendar horário", ctalead="Bora marcar um", ctaword="horário",
+        ctap="Agende seu horário agora, direto no WhatsApp. Rápido e sem complicação.",
+        ctabtn="Agendar agora", waverb="agendar um horário", strip="Agende pelo WhatsApp",
+        horario="Seg a Sáb, 9h às 20h", itens=["Corte", "Barba", "Corte + Barba", "Acabamento"]),
+    "beleza": dict(
+        navsec="serviços", menukick="Feito à mão", menutitle="Os serviços",
+        herobtn="Agendar horário", ctalead="Que tal se", ctaword="cuidar",
+        ctap="Agende seu horário agora, direto no WhatsApp. Rápido e sem complicação.",
+        ctabtn="Agendar agora", waverb="agendar um horário", strip="Agende pelo WhatsApp",
+        horario="Ter a Sáb, 9h às 19h", itens=["Nossos serviços", "Os queridinhos", "Sob medida"]),
+    "fitness": dict(
+        navsec="planos", menukick="Treine com a gente", menutitle="Os planos",
+        herobtn="Aula experimental", ctalead="Bora", ctaword="treinar",
+        ctap="Agende sua aula experimental agora, direto no WhatsApp.",
+        ctabtn="Quero treinar", waverb="fazer uma aula experimental", strip="Fale pelo WhatsApp",
+        horario="Seg a Sáb, 6h às 22h", itens=["Musculação", "Aulas", "Personal"]),
+    "pet": dict(
+        navsec="serviços", menukick="Cuidado de verdade", menutitle="Os serviços",
+        herobtn="Agendar", ctalead="Bora", ctaword="cuidar",
+        ctap="Agende agora, direto no WhatsApp. Rápido e sem complicação.",
+        ctabtn="Agendar agora", waverb="agendar um horário", strip="Fale pelo WhatsApp",
+        horario="Seg a Sáb, 8h às 18h", itens=["Banho e tosa", "Consulta", "Produtos"]),
+    "auto": dict(
+        navsec="serviços", menukick="Mão na roda", menutitle="Os serviços",
+        herobtn="Pedir orçamento", ctalead="Precisa de um", ctaword="orçamento",
+        ctap="Peça seu orçamento agora, direto no WhatsApp. Rápido e sem complicação.",
+        ctabtn="Pedir orçamento", waverb="pedir um orçamento", strip="Fale pelo WhatsApp",
+        horario="Seg a Sex, 8h às 18h", itens=["Serviços", "Revisão", "Orçamento sem compromisso"]),
+    "servico": dict(
+        navsec="serviços", menukick="O que fazemos", menutitle="Os serviços",
+        herobtn="Falar no WhatsApp", ctalead="Precisa de uma", ctaword="mão",
+        ctap="Fale com a gente agora, direto no WhatsApp. Rápido e sem complicação.",
+        ctabtn="Chamar agora", waverb="saber mais", strip="Fale pelo WhatsApp",
+        horario="Seg a Sex, 9h às 18h", itens=["Nossos serviços", "Os mais pedidos", "Sob medida"]),
+}
 
 
 TEMPLATE = """<!doctype html>
@@ -221,7 +297,7 @@ footer .cred{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;colo
     <h1 class="f rise">%%HEADLINE%%</h1>
     <p class="lead rise">%%TAGLINE%%</p>
     <div class="actions rise">
-      <a class="solid-btn" href="%%WA%%">Fazer um pedido</a>
+      <a class="solid-btn" href="%%WA%%">%%HEROBTN%%</a>
       <a class="text-link" href="#menu">Ver %%NAVSEC%%</a>
     </div>
   </div>
@@ -275,9 +351,9 @@ footer .cred{font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;colo
   <div class="bg duo" style="background-image:url('%%CTAIMG%%')"></div>
   <div class="scrim"></div>
   <div class="wrap">
-    <h2 class="f">Bateu a <em>fome</em>?</h2>
-    <p>Faça seu pedido agora, direto no WhatsApp. Rápido e sem complicação.</p>
-    <a class="solid-btn" href="%%WA%%">Pedir agora</a>
+    <h2 class="f">%%CTALEAD%% <em>%%CTAWORD%%</em>?</h2>
+    <p>%%CTAP%%</p>
+    <a class="solid-btn" href="%%WA%%">%%CTABTN%%</a>
   </div>
 </section>
 
@@ -318,22 +394,14 @@ def render(L):
     kw = kw_for(tipo)
     base = abs(hash(L.get("slug") or nome))
     lock = base % 900 + 10
-    wa_msg = "Ola! Vim pelo site de voces e queria fazer um pedido."
+    seg = seg_of(tipo)
+    copy = SEG_COPY.get(seg, SEG_COPY["servico"])
+    wa_msg = "Ola! Vim pelo site de voces e queria %s." % copy["waverb"]
     wa = "https://wa.me/%s?text=%s" % (tel, urllib.parse.quote(wa_msg)) if tel else "#"
-    seg = (tipo or "").lower()
-    food = any(k in seg for k in ["pizz", "restaur", "food", "comida", "bar", "boteco", "lanch", "hambur", "caf", "confeit", "doce", "padar", "acai", "açaí", "churrasc", "steak"])
-    if food:
-        navsec, menukick, menutitle = "cardápio", "Do forno à mesa", "O cardápio"
-        cta_word = "fome"
-    elif any(k in seg for k in ["barb", "salão", "salao", "cabel", "beleza", "estetic", "estét", "spa", "unha"]):
-        navsec, menukick, menutitle = "serviços", "Feito à mão", "Os serviços"
-        cta_word = "vontade"
-    else:
-        navsec, menukick, menutitle = "serviços", "O que fazemos", "Os serviços"
-        cta_word = "vontade"
-    # menu list (editorial, name + short descriptor, no fake prices)
-    itens = L.get("itens", []) or ["Especialidade da casa"]
-    descs = ["preparado no capricho, do jeito da casa", "receita da casa, feita na hora",
+    navsec, menukick, menutitle = copy["navsec"], copy["menukick"], copy["menutitle"]
+    # menu / services list (editorial, name + short descriptor, no fake prices)
+    itens = L.get("itens", []) or copy["itens"]
+    descs = ["no capricho, do jeito da casa", "feito na hora, como tem que ser",
              "o queridinho de quem já é cliente", "clássico que nunca sai de moda",
              "pra quem gosta de coisa bem feita", "sob medida, do começo ao fim"]
     mlist = ""
@@ -366,16 +434,16 @@ def render(L):
         "HEROIMG": img(kw, lock), "MENUIMG": img(kw, lock + 5), "ABOUTIMG": img(kw, lock + 11), "CTAIMG": img(kw, lock + 17),
         "NAVSEC": navsec, "MENUKICK": menukick, "MENUTITLE": menutitle, "ITENS": mlist,
         "QUOTE": quote, "QUOTEWHO": who, "ABOUTTITLE": abouttitle, "SOBRE": sobre,
-        "HORARIO": L.get("horario", "Ter a Dom, 18h às 23h"), "ENDERECO": endereco,
+        "HORARIO": L.get("horario", copy["horario"]), "ENDERECO": endereco,
         "TELDISP": L.get("telefone_exibicao", L.get("telefone", "WhatsApp")),
-        "STRIP1": L.get("strip", "Peça pelo WhatsApp"), "MAP": mapiframe,
+        "STRIP1": L.get("strip", copy["strip"]), "MAP": mapiframe,
         "COR": ac, "COR2": duo, "PAPER": paper, "INK": ink,
+        "HEROBTN": copy["herobtn"], "CTALEAD": copy["ctalead"], "CTAWORD": copy["ctaword"],
+        "CTAP": copy["ctap"], "CTABTN": copy["ctabtn"],
     }
-    html = TEMPLATE.replace("%%CTAWORD%%", cta_word)
+    html = TEMPLATE
     for k, v in reps.items():
         html = html.replace("%%" + k + "%%", str(v))
-    # fix cta word token used inside h2
-    html = html.replace("<em>fome</em>", "<em>%s</em>" % cta_word)
     return html
 
 
@@ -411,6 +479,8 @@ def main():
     subprocess.run(["git", "add", "-A"])
     subprocess.run(["git", "commit", "-m", "fabrica: build %d demos" % len(built)])
     subprocess.run(["git", "push"])
+    if os.environ.get("SEND", "1").strip() == "0":
+        print("SEND=0 (rebuild only, sem cards). done:", len(built)); return
     chats = resolve_chats()
     if not chats:
         print("NO CHAT IDS - user must /start the bot"); return
