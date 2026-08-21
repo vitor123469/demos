@@ -380,8 +380,40 @@ document.addEventListener('DOMContentLoaded',function(){
 </body></html>"""
 
 
-def img(kw, lock):
-    return "https://loremflickr.com/1600/1200/%s?lock=%d" % (kw, lock)
+# curated, verified Unsplash photos per segment (stable CDN, high quality, relevant)
+UNSPLASH = {
+    "barbearia": ["1503951914875-452162b0f3f1", "1585747860715-2ba37e788b70",
+                  "1596728325488-58c87691e9af", "1621605815971-fbc98d665033",
+                  "1512690459411-b9245aed614b"],
+    "beleza": ["1560066984-138dadb4c035", "1522337660859-02fbefca4702",
+               "1595476108010-b4d1f102b1b1", "1633681926022-84c23e8cb2d6"],
+    "pizza": ["1513104890138-7c749659a591", "1565299624946-b28f40a0ae38",
+              "1571997478779-2adcbbe9ab2f"],
+    "hamburguer": ["1568901346375-23c9450c58cd", "1571091718767-18b5b1457add",
+                   "1550547660-d9450f859349"],
+    "comida": ["1517248135467-4c7edcad34c4", "1414235077428-338989a2e8c0",
+               "1552566626-52f8b828add9", "1554118811-1e0d58224f24"],
+}
+
+
+def img_pool(tipo):
+    seg = seg_of(tipo)
+    s = (tipo or "").lower()
+    if seg == "comida":
+        if "pizz" in s:
+            return UNSPLASH["pizza"] + UNSPLASH["comida"]
+        if any(k in s for k in ["hambur", "burg", "lanch"]):
+            return UNSPLASH["hamburguer"] + UNSPLASH["comida"]
+        return UNSPLASH["comida"] + UNSPLASH["pizza"]
+    if seg == "barbearia":
+        return UNSPLASH["barbearia"]
+    if seg == "beleza":
+        return UNSPLASH["beleza"]
+    return UNSPLASH["comida"] + UNSPLASH["beleza"]
+
+
+def img(uid):
+    return "https://images.unsplash.com/photo-%s?w=1600&q=80&auto=format&fit=crop" % uid
 
 
 def render(L):
@@ -391,9 +423,11 @@ def render(L):
     cidade = L.get("cidade", "")
     endereco = L.get("endereco", cidade)
     ac, duo, paper, ink = palette_for(tipo, L)
-    kw = kw_for(tipo)
-    base = abs(hash(L.get("slug") or nome))
-    lock = base % 900 + 10
+    pool = img_pool(tipo)
+    base = sum(ord(c) for c in (L.get("slug") or nome))
+
+    def pick(n):
+        return img(pool[(base + n) % len(pool)])
     seg = seg_of(tipo)
     copy = SEG_COPY.get(seg, SEG_COPY["servico"])
     wa_msg = "Ola! Vim pelo site de voces e queria %s." % copy["waverb"]
@@ -431,7 +465,7 @@ def render(L):
         "TAGLINE": L.get("tagline", "Um clássico do bairro, feito com o cuidado de sempre."),
         "WA": wa, "NOTA": L.get("nota", "5,0"), "AVAL": L.get("avaliacoes", "novas"),
         "STARS": stars, "ANOS": L.get("anos", "10 anos"),
-        "HEROIMG": img(kw, lock), "MENUIMG": img(kw, lock + 5), "ABOUTIMG": img(kw, lock + 11), "CTAIMG": img(kw, lock + 17),
+        "HEROIMG": pick(0), "MENUIMG": pick(1), "ABOUTIMG": pick(2), "CTAIMG": pick(3),
         "NAVSEC": navsec, "MENUKICK": menukick, "MENUTITLE": menutitle, "ITENS": mlist,
         "QUOTE": quote, "QUOTEWHO": who, "ABOUTTITLE": abouttitle, "SOBRE": sobre,
         "HORARIO": L.get("horario", copy["horario"]), "ENDERECO": endereco,
